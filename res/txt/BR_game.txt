@@ -1,0 +1,47 @@
+﻿AJUDA
+Controles do Teclado (Menus)
+CIMA/2 - BAIXO/8: posição
+ESQUERDA/4 - DIREITA/6: seleção
+Softkey Esquerda/FOGO/5: Confirmar
+Teclas SOFTKEY Direita: retornar
+Controles do Teclado (Jogo)
+ESQUERDA/4 - DIREITA/6: Mover horizontalmente
+CIMA/2 - BAIXO/8: Mover verticalmente
+FOGO/5: Atirar
+Tecla Softkey Direita: Menu
+Controles touch-screen (Menus)
+Toque na opção desejada para escolher.
+Mova seu dedo pelas diversas opções para escolher entre elas.
+Retire seu dedo da opção desejada para selecioná-la.
+Escolha as teclas softkey ao tocá-las.
+Controles touch-screen (Jogo)
+Mova-se através do mapa usando o pad virtual.
+Mire o alcance usando o pad virtual.
+Toque a tecla softkey esquerda para prender um animal ou atirar nele.
+Toque a tecla softkey direita para acessar o menu de pausa.
+Jogar
+Opções
+Informações
+Sair
+Ajuda
+Sobre
+Son
+Vibração
+Idioma
+Sim
+Não
+Sair?
+Continuar
+Alto
+Médio
+Baixo
+Desligado
+Menu
+Conselho
+Missão
+Objetivo
+Retornar
+Concluído!
+Retornar ao menu? Todas as mudanças não salvas serão perdidas.
+Continuar
+Nova missão

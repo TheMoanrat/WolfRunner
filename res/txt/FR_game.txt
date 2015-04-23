@@ -1,0 +1,47 @@
+﻿AIDE
+Contrôles (Menus)
+HAUT/2 - BAS/8: position
+GAUCHE/4 - DROITE/6: sélection
+SOFTKEY GAUCHE/FEU/5: Confirmer
+SOFTKEY DROIT: retour
+Contrôles (Jeu)
+GAUCHE/4 - DROITE/6: Mouvement horizontal
+HAUT/2 - BAS/8: Mouvement vertical
+FEU: Tir
+SOFTKEY DROIT: Menu
+Contrôles tactiles (Menus)
+Touche l'option souhaitée pour la sélectionner.
+Bouge ton doigt à travers les différentes options pour les sélectionner
+Lève le doigt de l'option désirée pour confirmer ta sélection.
+Sélectionne les softkeys en les touchant.
+Contrôles tactiles (Jeu)
+Déplace toi dans la carte avec le pad virtuel.
+Vise avec le pad virtuel.
+Touche la softkey gauche pour piéger ou abattre l'animal.
+Touche la softkey droite pour accéder au menu pause.
+Jouer
+Options
+Info
+Quitter
+Aide
+À Propos
+Son
+Vibration
+Langage
+Oui
+Non
+Quitter?
+Continuer
+Son fort
+Son moyen
+Son bas
+Son off
+Menu
+Conseil
+Mission
+Objective
+Retour
+Complété!
+Veux tu retourner au menu? Toutes les données non sauvegardées seront perdues.
+Continuer
+Nouvelle mission

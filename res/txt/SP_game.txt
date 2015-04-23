@@ -1,0 +1,47 @@
+﻿AYUDA
+Controles (Menús)
+ARRIBA/2 - ABAJO/8: posición
+IZQUIERDA/4 - DERECHA/6: selección
+Pulsa FIRE/5 o softkey izquierdo para confirmar
+Pulsa softkey derecho para retroceder
+Controles (Juego)
+IZQUIERDA/4 - DERECHA/6: Movimiento horizontal 
+ARRIBA/2 - ABAJO/8: Movimiento vertical
+FIRE/5: Intentar cazar/Disparo
+SOFTKEY DER: Menu
+Control táctil (Menús)
+Toca la opción deseada para seleccionarla.
+Desplaza el dedo por las distintas opciones para seleccionarlas.
+Levanta el dedo sobre una opción para confirmar su selección.
+Selecciona los softkeys tocando sobre ellos.
+Control táctil (Juego)
+Muevete por el mapa usando el pad virtual.
+Apunta con la mirilla mediante el pad virtual.
+Toca el softkey izquierdo para atrapar un animal o dispararle.
+Toca el softkey derecho para acceder al menú de pausa.
+Jugar
+Opciones
+Info
+Salir
+Ayuda
+About
+Sonido
+Vibración
+Idioma
+Si
+No
+¿Salir?
+Continuar
+alto
+medio
+bajo
+off
+Menu
+Consejo
+Misión
+Objetivo
+Volver
+¡Completado!
+¿Deseas abandonar y volver al mapa?
+Continuar
+Nueva misión

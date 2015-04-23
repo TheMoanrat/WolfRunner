@@ -1,0 +1,47 @@
+﻿HELP
+KeyPad Controls (Menus)
+UP/2 - DOWN/8: position
+LEFT/4 - RIGHT/6: selection
+Press FIRE/5 or left softkey to confirm a selection.
+Press right softkey to back.
+KeyPad Controls (Game)
+LEFT/4 - RIGHT/6: Move horizontally
+UP/2 - DOWN/8: Move vertically
+FIRE/5: Shoot
+Right Softkey: Menu
+Touch-screen controls (Menus)
+Touch the desired option to choose it.
+Move your finger across the diferent options to choose them.
+Lift your finger off of the desired option to select it.
+Control the menu to go forward or return by touching the softkeys.
+Touch-screen controls (Game)
+Move through the map using the virtual pad.
+Aim the scope using the virtual pad.
+Touch the left softkey to trap an animal or shoot it.
+Touch the right softkey to access the pause menu.
+Play
+Options
+Info
+Exit
+Help
+About
+Sound
+Vibration
+Language
+Yes
+No
+Exit?
+Continue
+High
+Medium
+Low
+Off
+Menu
+Advice
+Mission
+Objective
+Return
+Completed!
+Return to the menu? All unsaved changes will be lost.
+Continue
+New mission
