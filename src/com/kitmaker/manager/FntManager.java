@@ -194,7 +194,6 @@ public class FntManager {
         String zBaseSize = "-" + BASE_SIZE[Settings.ms_iSize];
 
         try {
-
             // load image
             try {
                 FntManager.ms_vFont[_iIndex][0] = Image.createImage("/" + FONT_URL[_iIndex] + zBaseSize + ".png");

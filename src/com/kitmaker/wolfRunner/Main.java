@@ -94,7 +94,6 @@ public class Main extends Canvas implements Runnable
     public static Class ms_vClass;
     
     //delta time
-    public int backgroundSpeed;
     public long thisLoop;
     public static long deltaTime;
     public static final float SECOND = 1000;
@@ -181,7 +180,7 @@ public class Main extends Canvas implements Runnable
         //////////////////////////////////////////////////////////////////////////
         //#if MIDP=="2.0"
         setFullScreenMode (true);
-        setTitle(null);
+        //setTitle(null);
         //#endif
 
         //////////////////////////////////////////////////////////////////////////
@@ -276,7 +275,6 @@ public class Main extends Canvas implements Runnable
 
         RequestStateChange(Define.ST_INIT_SPLASH);
         while (!Define.ms_bFinishApp) {
-
             if (!Define.ms_bPaused) {
                 //DELTATIME
                 putDelta();
@@ -288,7 +286,6 @@ public class Main extends Canvas implements Runnable
                 Repaints();
 
             }
-
            try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
@@ -311,8 +308,6 @@ public class Main extends Canvas implements Runnable
                 ModeMenu.Run();
             else
                 ModeGame.Run();
-            
-            
             // Update music state
             SndManager.UpdateMusic();
 
@@ -2287,8 +2282,7 @@ public class Main extends Canvas implements Runnable
             if (Define.ms_iState < Define.ST_GAME_INIT)
                 ModeMenu.InitState (_iNewState);
             else
-                ModeGame.InitState (_iNewState);
-            
+                ModeGame.InitState(_iNewState);
             Debug.DebugPostmortemMsg("** State " + _iNewState + " initialized");
             Debug.DebugPostmortemMsg("===================================");
 

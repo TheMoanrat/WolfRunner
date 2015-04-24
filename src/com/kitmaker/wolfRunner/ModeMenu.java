@@ -80,8 +80,6 @@ public class ModeMenu extends Define {
         Define.ST_MENU_HELP,
         Define.ST_MENU_ABOUT,
     };
-    
-
     // Options menu //-----------------------------------------------------------
     static final short[] OPTIONS_TITLES = {
         TxtManager.TXT_OPTIONS_SOUND,
@@ -613,7 +611,6 @@ public class ModeMenu extends Define {
         switch (Define.ms_iState) {
             // ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
             case Define.ST_INIT_SPLASH:
-                
                 _g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_LOGO],
                 Define.SIZEX2, Define.SIZEY2, Graphics.HCENTER | Graphics.VCENTER);                
                 break;

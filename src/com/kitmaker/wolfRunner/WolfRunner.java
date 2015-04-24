@@ -30,7 +30,7 @@ public class WolfRunner extends MIDlet {
     public static String ms_zLanguage;
     public static String ms_zCountry;
     private static final String APP_VERSION = "1.0.0";
-    private static final String APP_NAME = "Hunter's Prize";
+    private static final String APP_NAME = "Wolf Runner";
     public static String ms_zMIDletVersion = APP_VERSION;
     public static String ms_zMIDletName = APP_NAME;
     

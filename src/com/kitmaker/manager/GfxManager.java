@@ -60,7 +60,9 @@ public class GfxManager {
         GFX_PREV + "sk_menu" + GFX_FORMAT,       //03
         GFX_PREV + "sk_next" + GFX_FORMAT,       //04
         GFX_PREV + "sk_reset" + GFX_FORMAT,      //05
-        GFX_PREV + "bground" + GFX_FORMAT,       //06
+        //TODO IMPLEMENT 2 BACKGROUNDS
+        GFX_PREV + "bground1" + GFX_FORMAT,       //06
+        GFX_PREV + "bground2" + GFX_FORMAT,       //06
         
         
     };
@@ -87,7 +89,9 @@ public class GfxManager {
     public static final int GFXID_SK_MENU = 3;
     public static final int GFXID_SK_NEXT = 4;
     public static final int GFXID_SK_RESET = 5;
-    public static final int GFXID_BGROUND = 6;
+    public static final int GFXID_BGROUND1 = 6;
+    public static final int GFXID_BGROUND2 = 7;
+
        
     public static final int SPR_ID = 0;
     public static final int SPR_POS_X = 1;
@@ -103,6 +107,8 @@ public class GfxManager {
     public static final int SPRID_SK_MENU = 4;
     public static final int SPRID_SK_NEXT = 8;
     public static final int SPRID_SK_RESET = 10;
+        public static final int SPRID_SK_BGROUND = 12;
+
     
     //#if SIZE == "Small"
 //#      static short [][] SPRITE_DATA = {
@@ -128,6 +134,10 @@ public class GfxManager {
         
         {GFXID_SK_RESET, 0,  0,    14,  19,   0,  0}, 
         {GFXID_SK_RESET, 0,  0,    21,  19,   0,  0}, 
+        
+        {GFXID_BGROUND1, 0,  0,    240,  320,   0,  0}, 
+        {GFXID_BGROUND2, 0,  0,    240,  320,   0,  0}, 
+
     };
     //#elif SIZE == "Extra"
 //#      static short [][] SPRITE_DATA = {
