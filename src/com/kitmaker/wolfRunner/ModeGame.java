@@ -81,13 +81,12 @@ public class ModeGame extends Define {
     public static int ms_iArrowMapPositionRunX = -1;
     public static int ms_iArrowMapPositionRunY = -1;
     static String zArray[];
-    
     public static int ms_iBackgroundY1;
     public static int ms_iBackgroundX1;
     public static int ms_iBackgroundY2;
     public static int ms_iBackgroundX2;
 
-    static void InitState(int _iNewState){
+    static void InitState(int _iNewState) {
         //#if StaticHud
 //#         ms_isPaintHud = true;
         //#endif
@@ -105,7 +104,7 @@ public class ModeGame extends Define {
 //                matrixGame();
 //                initGame();
                 break;
-        } 
+        }
     }
 
     /*
@@ -159,7 +158,8 @@ public class ModeGame extends Define {
                 Main.RequestStateChange(Define.ST_GAME_START);
                 break;
             case Define.ST_GAME_START:
-                
+                scrollScreen();
+                break;
         }
     }
 
@@ -181,27 +181,15 @@ public class ModeGame extends Define {
 //        SndManager.PlayMusic(SndManager.MUSIC_MAP, true, 0);
 
     }
-    private static final int MATRIX_LAYERS = 16;
-    public static int[][][] dMatrix = new int[MATRIX_LAYERS][][];
-    static int ms_iDrawTile_xPos = 0;
-    static int ms_iDrawTile_yPos = 0;
-    static int sprite = 0;
-    static int ms_iTileX;
-    static int ms_iTileY;
-    static int ms_iFirstTileX;
-    static int ms_iFirstTileY;
-    static int ms_iDrawClipX;
-    static int ms_iDrawClipY;
-    static int ms_iDrawClipW;
-    static int ms_iDrawClipH;
-    public static byte ms_iMaxW;
-    public static byte ms_iMaxH;
-    public static byte ms_iLayers;
-    public static byte ms_iCurrentMatrixLevels;
 
-    public static void scrollScreen(){
-        
+    public static void scrollScreen() {
+        if (ms_iBackgroundY2 >= 0) {
+            ms_iBackgroundY1 = 0;
+        }
+        ms_iBackgroundY2 = ms_iBackgroundY1+GfxManager.ms_vImage[GfxManager.GFXID_BGROUND2].getHeight();
+        ms_iBackgroundY1 =(int) ((Define.BASE_SIZEY * Main.deltaTime) / Main.SECOND);
     }
+
     public static void resetPlayerMovements() {
         C_UP = C_DOWN = C_LEFT = C_RIGHT = false;
     }

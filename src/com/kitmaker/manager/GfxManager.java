@@ -60,7 +60,7 @@ public class GfxManager {
         GFX_PREV + "sk_menu" + GFX_FORMAT,       //03
         GFX_PREV + "sk_next" + GFX_FORMAT,       //04
         GFX_PREV + "sk_reset" + GFX_FORMAT,      //05
-        //TODO IMPLEMENT 2 BACKGROUNDS
+        //Backgrounds
         GFX_PREV + "bground1" + GFX_FORMAT,       //06
         GFX_PREV + "bground2" + GFX_FORMAT,       //06
         
