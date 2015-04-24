@@ -100,7 +100,7 @@ public class ModeGame extends Define {
                 ms_iBackgroundX1 = 0;
                 ms_iBackgroundY1 = 0;
                 ms_iBackgroundX2 = 0;
-                ms_iBackgroundY2 = GfxManager.ms_vImage[GfxManager.GFXID_BGROUND1].getHeight();
+                ms_iBackgroundY2 = ms_iBackgroundY1-GfxManager.ms_vImage[GfxManager.GFXID_BGROUND1].getHeight();
 //                matrixGame();
 //                initGame();
                 break;
@@ -181,12 +181,12 @@ public class ModeGame extends Define {
 //        SndManager.PlayMusic(SndManager.MUSIC_MAP, true, 0);
 
     }
-
+    //TODO make this go at acording to the wolf speed
     public static void scrollScreen() {
         if (ms_iBackgroundY2 >= 0) {
             ms_iBackgroundY1 = 0;
         }
-        ms_iBackgroundY2 = ms_iBackgroundY1+GfxManager.ms_vImage[GfxManager.GFXID_BGROUND2].getHeight();
+        ms_iBackgroundY2 = ms_iBackgroundY1-GfxManager.ms_vImage[GfxManager.GFXID_BGROUND2].getHeight();
         ms_iBackgroundY1 =(int) ((Define.BASE_SIZEY * Main.deltaTime) / Main.SECOND);
     }
 
