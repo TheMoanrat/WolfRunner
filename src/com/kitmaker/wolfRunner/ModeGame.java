@@ -105,7 +105,7 @@ public class ModeGame extends Define {
 //                matrixGame();
 //                initGame();
                 break;
-        }
+        } 
     }
 
     /*
