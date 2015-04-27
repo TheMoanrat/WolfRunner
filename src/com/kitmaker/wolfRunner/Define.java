@@ -25,7 +25,7 @@ public class Define {
     // ModeGame States
     static final int ST_GAME_INIT = 100;
     static final int ST_GAME_PAUSE = ST_GAME_INIT+1;
-    static final int ST_GAME_START = ST_GAME_PAUSE+1;
+    static final int ST_GAME_RUNNING = ST_GAME_PAUSE+1;
     // COLORS
     public static final int GREEN    = 0xff0ee50e;
     public static final int RED      = 0xffA02020;

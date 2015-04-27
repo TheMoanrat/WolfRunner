@@ -62,8 +62,10 @@ public class GfxManager {
         GFX_PREV + "sk_reset" + GFX_FORMAT,      //05
         //Backgrounds
         GFX_PREV + "bground1" + GFX_FORMAT,       //06
-        GFX_PREV + "bground2" + GFX_FORMAT,       //06
-        
+        GFX_PREV + "bground2" + GFX_FORMAT,       //07
+        //Wolves
+        GFX_PREV + "wolfbrown" + GFX_FORMAT,       //08
+
         
     };
 
@@ -83,16 +85,20 @@ public class GfxManager {
 
 
     // Init
+    //Menu
     public static final int GFXID_LOGO = 0;
     public static final int GFXID_MENU_BUTTONS = 1;
     public static final int GFXID_SK_HOME = 2;
     public static final int GFXID_SK_MENU = 3;
     public static final int GFXID_SK_NEXT = 4;
     public static final int GFXID_SK_RESET = 5;
+    //Background
     public static final int GFXID_BGROUND1 = 6;
     public static final int GFXID_BGROUND2 = 7;
+    //Wolves
+    public static final int GFXID_WOLF = 8;
 
-       
+    
     public static final int SPR_ID = 0;
     public static final int SPR_POS_X = 1;
     public static final int SPR_POS_Y = 2;
@@ -102,12 +108,18 @@ public class GfxManager {
     public static final int SPR_HOT_Y = 6;
     
     //Index data to acces to info graphics sprites:
+    //Menu
     public static final int SPRID_BUTTON= 0;
     public static final int SPRID_SK_HOME = 2;
     public static final int SPRID_SK_MENU = 4;
     public static final int SPRID_SK_NEXT = 8;
     public static final int SPRID_SK_RESET = 10;
-        public static final int SPRID_SK_BGROUND = 12;
+    //Background
+    public static final int SPRID_BGROUND1 = 12;
+    public static final int SPRID_BGROUND2 = 13;
+    //Wolves
+    public static final int SPRID_WOLF= 14;
+    
 
     
     //#if SIZE == "Small"
@@ -117,7 +129,7 @@ public class GfxManager {
 //#     static short[][] SPRITE_DATA = {
 //#     };
     //#elif SIZE == "Large"
-    static short[][] SPRITE_DATA = {
+    public static short[][] SPRITE_DATA = {
         {GFXID_MENU_BUTTONS,  0,  0,    14,  19,   0,  0}, 
         {GFXID_MENU_BUTTONS,  0,  0,    21,  19,   0,  0}, 
         
@@ -136,14 +148,19 @@ public class GfxManager {
         {GFXID_SK_RESET, 0,  0,    21,  19,   0,  0}, 
         
         {GFXID_BGROUND1, 0,  0,    240,  320,   0,  0}, 
-        {GFXID_BGROUND2, 0,  0,    240,  320,   0,  0}, 
-
+        {GFXID_BGROUND2, 0,  0,    240,  320,   0,  0},
+        
+        {GFXID_WOLF, 0,  0,    23,  58,   0,  0}, 
+        {GFXID_WOLF, 23,  0,    46,  58,   0,  0}, 
+        {GFXID_WOLF, 46,  0,    69,  58,   0,  0}, 
+        {GFXID_WOLF, 69,  0,    92,  58,   0,  0}, 
+        {GFXID_WOLF, 92,  0,    114,  58,   0,  0}, 
     };
     //#elif SIZE == "Extra"
-//#      static short [][] SPRITE_DATA = {
+//#     public static short [][] SPRITE_DATA = {
 //#     };
     //#elif SIZE=="XXL"
-//#      static short [][] SPRITE_DATA = {
+//#     public static short [][] SPRITE_DATA = {
 //#     };
     //#endif
     
@@ -168,31 +185,38 @@ public class GfxManager {
 //#     };
     //#endif
     
-    static final byte MENU_BUTTON [] = {
+   public static final byte MENU_BUTTON [] = {
         GfxManager.SPRID_BUTTON,
         GfxManager.SPRID_BUTTON+1,
     };
     
-    static final byte SK_HOME [] = {
+   public static final byte SK_HOME [] = {
         GfxManager.SPRID_SK_HOME,
         GfxManager.SPRID_SK_HOME+1,
     };
     
-    static final byte SK_MENU [] = {
-        GfxManager.SPRID_SK_MENU,
-        GfxManager.SPRID_SK_MENU+1,
-        GfxManager.SPRID_SK_MENU+2,
-        GfxManager.SPRID_SK_MENU+3,
+   public static final byte SK_MENU [] = {
+        SPRID_SK_MENU,
+        SPRID_SK_MENU+1,
+        SPRID_SK_MENU+2,
+        SPRID_SK_MENU+3,
     };
     
-    static final byte SK_NEXT [] = {
-        GfxManager.SPRID_SK_NEXT,
-        GfxManager.SPRID_SK_NEXT+1,
+    public static final byte SK_NEXT [] = {
+        SPRID_SK_NEXT,
+        SPRID_SK_NEXT+1,
     };
     
-    static final byte SK_RESET [] = {
-        GfxManager.SPRID_SK_RESET,
-        GfxManager.SPRID_SK_RESET+1,
+   public static final byte SK_RESET [] = {
+        SPRID_SK_RESET,
+        SPRID_SK_RESET+1,
+    };
+     public static final byte WOLF [] = {
+        SPRID_WOLF,
+        SPRID_WOLF+1,
+        SPRID_WOLF+2,
+        SPRID_WOLF+3,
+        SPRID_WOLF+4
     };
     
     // GRAPHICS

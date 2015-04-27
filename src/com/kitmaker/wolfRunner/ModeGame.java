@@ -91,25 +91,30 @@ public class ModeGame extends Define {
 //#         ms_isPaintHud = true;
         //#endif
 
-        switch (Define.ms_iState) {
+        switch (_iNewState) {
 
             // iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
             // This state only is executed when we come tu the menu
             case Define.ST_GAME_INIT:
                 loadGameImages();
-                ms_iBackgroundX1 = 0;
-                ms_iBackgroundY1 = 0;
-                ms_iBackgroundX2 = 0;
-                ms_iBackgroundY2 = ms_iBackgroundY1-GfxManager.ms_vImage[GfxManager.GFXID_BGROUND1].getHeight();
+                initBackground();
+                WolfPack.init();
 //                matrixGame();
 //                initGame();
                 break;
         }
     }
 
+    static void initBackground() {
+        ms_iBackgroundX1 = 0;
+        ms_iBackgroundY1 = 0;
+        ms_iBackgroundX2 = 0;
+        ms_iBackgroundY2 = ms_iBackgroundY1 - GfxManager.ms_vImage[GfxManager.GFXID_BGROUND1].getHeight();
+    }
     /*
      * load the images used during the gameplay
      */
+
     private static void loadGameImages() {
         GfxManager.ResetGraphics();
 
@@ -118,8 +123,11 @@ public class ModeGame extends Define {
             case Define.ST_GAME_INIT:
                 //GfxManager.AddGraphic(GfxManager.GFXID_TILESET);
                 GfxManager.AddGraphic(GfxManager.GFXID_BGROUND1);
-                GfxManager.AddGraphic(GfxManager.GFXID_BGROUND1);
+                GfxManager.AddGraphic(GfxManager.GFXID_BGROUND2);
+                GfxManager.AddGraphic(GfxManager.GFXID_WOLF);
                 GfxManager.LoadGraphics(true);
+                break;
+            case Define.ST_GAME_RUNNING:
                 break;
         }
     }
@@ -128,8 +136,9 @@ public class ModeGame extends Define {
         switch (Define.ms_iState) {
             case Define.ST_GAME_INIT:
                 break;
-            case Define.ST_GAME_START:
+            case Define.ST_GAME_RUNNING:
                 drawBackground(_g);
+                WolfPack.Draw(_g);
                 break;
         }
 
@@ -155,10 +164,11 @@ public class ModeGame extends Define {
         switch (Define.ms_iState) {
             // rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
             case Define.ST_GAME_INIT:
-                Main.RequestStateChange(Define.ST_GAME_START);
+                Main.RequestStateChange(Define.ST_GAME_RUNNING);
                 break;
-            case Define.ST_GAME_START:
+            case Define.ST_GAME_RUNNING:
                 scrollScreen();
+                WolfPack.Run();
                 break;
         }
     }
@@ -182,12 +192,13 @@ public class ModeGame extends Define {
 
     }
     //TODO make this go at acording to the wolf speed
+
     public static void scrollScreen() {
         if (ms_iBackgroundY2 >= 0) {
             ms_iBackgroundY1 = 0;
         }
-        ms_iBackgroundY2 = ms_iBackgroundY1-GfxManager.ms_vImage[GfxManager.GFXID_BGROUND2].getHeight();
-        ms_iBackgroundY1 =(int) ((Define.BASE_SIZEY * Main.deltaTime) / Main.SECOND);
+        ms_iBackgroundY1 += (int) ((Define.BASE_SIZEY * Main.deltaTime) / Main.SECOND);
+        ms_iBackgroundY2 = ms_iBackgroundY1 - GfxManager.ms_vImage[GfxManager.GFXID_BGROUND2].getHeight();
     }
 
     public static void resetPlayerMovements() {
@@ -282,7 +293,6 @@ public class ModeGame extends Define {
         _g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
         _g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_BGROUND1], ms_iBackgroundX1, ms_iBackgroundY1, 0);
         _g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_BGROUND2], ms_iBackgroundX2, ms_iBackgroundY2, 0);
-
     }
 
     public static void drawMenuBackground(Graphics _g) {

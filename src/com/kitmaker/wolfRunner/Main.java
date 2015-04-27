@@ -1216,7 +1216,7 @@ public class Main extends Canvas implements Runnable
                 }
             }
         }
-        HandleInput();
+        //HandleInput();
     }
 
     public void keyReleased(int keyCode) {
