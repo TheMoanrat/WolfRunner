@@ -65,8 +65,10 @@ public class GfxManager {
         GFX_PREV + "bground2" + GFX_FORMAT,       //07
         //Wolves
         GFX_PREV + "wolfbrown" + GFX_FORMAT,       //08
+        GFX_PREV + "grasstile" + GFX_FORMAT,       //09
+        GFX_PREV + "sidetreetile" + GFX_FORMAT,       //10
+        GFX_PREV + "rocktile" + GFX_FORMAT,       //11
 
-        
     };
 
     static final byte FLG_TRANSFORMABLE = 1;  // Allows horizontal/vertical mirroring !!DEPRECATED!!
@@ -97,8 +99,12 @@ public class GfxManager {
     public static final int GFXID_BGROUND2 = 7;
     //Wolves
     public static final int GFXID_WOLF = 8;
+    //Tiles
+    public static final int GFXID_GRASSTILE = 9;
+    public static final int GFXID_SIDE_TREETILE = 10;
+    public static final int GFXID_ROCKTILE = 11;
 
-    
+
     public static final int SPR_ID = 0;
     public static final int SPR_POS_X = 1;
     public static final int SPR_POS_Y = 2;
@@ -150,11 +156,14 @@ public class GfxManager {
         {GFXID_BGROUND1, 0,  0,    240,  320,   0,  0}, 
         {GFXID_BGROUND2, 0,  0,    240,  320,   0,  0},
         
-        {GFXID_WOLF, 0,  0,    23,  58,   0,  0}, 
-        {GFXID_WOLF, 23,  0,    46,  58,   0,  0}, 
-        {GFXID_WOLF, 46,  0,    69,  58,   0,  0}, 
-        {GFXID_WOLF, 69,  0,    92,  58,   0,  0}, 
-        {GFXID_WOLF, 92,  0,    114,  58,   0,  0}, 
+        {GFXID_WOLF,  0,  0,    23,  58,   0,  0}, 
+        {GFXID_WOLF, 23,  0,    23,  58,   0,  0}, 
+        {GFXID_WOLF, 46,  0,    23,  58,   0,  0}, 
+        {GFXID_WOLF, 69,  0,    23,  58,   0,  0}, 
+        {GFXID_WOLF, 92,  0,    23,  58,   0,  0}, 
+        {GFXID_WOLF, 0,  58,    27,  134,   0,  0}, 
+        {GFXID_WOLF, 27, 58,    57,  134,   0,  0}, 
+
     };
     //#elif SIZE == "Extra"
 //#     public static short [][] SPRITE_DATA = {
@@ -164,8 +173,10 @@ public class GfxManager {
 //#     };
     //#endif
     
-    
-    public static final int SPRID_SMALLTILESET = 0;
+    //Tiles
+    public static final int SPRID_GRASSTILE = 0;
+    public static final int SPRID_SIDE_TREETILE = 1;
+    public static final int SPRID_ROCKTILE = 3;
     //#if SIZE == "Small"
 //#     public static short [][] TILE_DATA = {
 //#     };
@@ -175,7 +186,10 @@ public class GfxManager {
 //#     
     //#elif SIZE == "Large"
     public static short [][] TILE_DATA = {
-        //{ GfxManager.GFXID_TILESET,    0,   0,    16, 16,     0, 0},
+        {GFXID_GRASSTILE, 0,  0,    32,  32,   0,  0}, 
+        {GFXID_SIDE_TREETILE, 0,  0,    32,  32,   0,  0}, 
+        {GFXID_SIDE_TREETILE, 32,  0,    32,  32,   0,  0}, 
+        {GFXID_GRASSTILE, 0,  0,    32,  32,   0,  0}, 
     };
     //#elif SIZE == "Extra"
 //#     public static short [][] TILE_DATA = {
@@ -216,9 +230,20 @@ public class GfxManager {
         SPRID_WOLF+1,
         SPRID_WOLF+2,
         SPRID_WOLF+3,
-        SPRID_WOLF+4
+        SPRID_WOLF+4,
+        SPRID_WOLF+5,
+        SPRID_WOLF+6,
     };
-    
+    public static final byte GRASS_TILE [] = {
+        SPRID_GRASSTILE,
+    };
+     public static final byte SIDE_TREE_TILE [] = {
+        SPRID_SIDE_TREETILE,
+        SPRID_SIDE_TREETILE+1,
+    };
+     public static final byte ROCK_TILE [] = {
+        SPRID_ROCKTILE,
+    };
     // GRAPHICS
     public static Image [] ms_vImage;
 
