@@ -98,8 +98,8 @@ public class Wolf extends Vector2 {
     public void move() {
         x = WolfPack.ms_iX + _iPositionXInPack;
         if (!_isJumping
-                &&y < WolfPack.ms_iJumpPointRatio[1]
-                && y + ms_iHeight > WolfPack.ms_iJumpPointRatio[0]) {
+                &&y >  WolfPack.ms_iJumpPointRatio[1]
+                && y  < WolfPack.ms_iJumpPointRatio[0]) {
             _isJumping = true;
             _isJumpingFrame1 = true;
         }
@@ -157,7 +157,7 @@ public class Wolf extends Vector2 {
                 _g.drawImage(
                         GfxManager.ms_vImage[GfxManager.GFXID_WOLF],
                         (int) x - GfxManager.SPRITE_DATA[GfxManager.WOLF[5]][GfxManager.SPR_POS_X],
-                        (int) y + ms_iHeight,
+                        (int) y - ms_iHeight,
                         0);
             } else if (_isJumpingFrame2) {
 
@@ -168,7 +168,7 @@ public class Wolf extends Vector2 {
                 _g.drawImage(
                         GfxManager.ms_vImage[GfxManager.GFXID_WOLF],
                         (int) x - GfxManager.SPRITE_DATA[GfxManager.WOLF[6]][GfxManager.SPR_POS_X],
-                        (int) y + ms_iHeight,
+                        (int) y - ms_iHeight,
                         0);
             }
         } else {

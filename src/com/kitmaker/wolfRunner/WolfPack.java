@@ -63,7 +63,7 @@ public class WolfPack {
         for (int i = 0; i < ms_iWolfPackPositions.length; i++) {
             for (int e = 0; e < ms_iWolfPackPositions[i].length; e++) {
                 if (ms_iWolfPackPositions[i][e] == 1) {
-                    wolf.initWolf(wolf.ms_iWidth * e, (wolf.ms_iHeight / 2) * i);
+                    wolf.initWolf(wolf.ms_iWidth * e, (wolf.ms_iHeight) * i);
                     ms_iWolfPackPositions[i][e] = 2;
                     return;
                 }
@@ -109,7 +109,10 @@ public class WolfPack {
     }
 
     public static void jumpPointMovement() {
-        if (ms_iJumpPointRatio[0] < Define.SIZEY) {
+        if (ms_iJumpPointRatio[0] > Define.SIZEY) {
+            ms_iJumpPointRatio[0] = 0;
+            ms_iJumpPointRatio[1] = 0;
+        } else {
             ms_iJumpPointRatio[0] += ms_iPackSpeedY;
             ms_iJumpPointRatio[1] += ms_iPackSpeedY;
         }
@@ -173,7 +176,6 @@ public class WolfPack {
     //</editor-fold>
 
     public static void Draw(Graphics _g) {
-        _g.drawRect(0, ms_iJumpPointRatio[0], Define.BASE_SIZEX, ms_iJumpPointRatio[1]);
         for (int i = 0; i < ms_wolves.length; i++) {
             ms_wolves[i].Draw(_g);
         }
