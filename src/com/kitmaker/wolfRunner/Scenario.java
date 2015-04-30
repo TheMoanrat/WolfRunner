@@ -54,7 +54,9 @@ public class Scenario {
             }
             ms_iFirstTileY = -TILE_HEIGHT;
             generateTiles();
-            ms_iActualRowToObstacle++;
+            if (!WolfPack.isAnimating) {
+                ms_iActualRowToObstacle++;
+            }
         }
     }
 
