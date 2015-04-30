@@ -17,14 +17,14 @@ public class Wolf extends Vector2 {
     public boolean _isActive;
     public boolean _isDying;
     public boolean _isJumping;
-    public boolean _isJumpingFrame1;
-    public boolean _isJumpingFrame2;
     public int _iActualFrame = 0;
     public static int ms_iWidth = GfxManager.SPRITE_DATA[GfxManager.WOLF[0]][GfxManager.SPR_WIDTH];
     public static int ms_iHeight = GfxManager.SPRITE_DATA[GfxManager.WOLF[0]][GfxManager.SPR_HEIGHT];
     public int _iPositionXInPack;
     public int _iPositionYInPack;
-
+    public int _iColInPack;
+    public int _iRowInPack;
+    
     public Wolf() {
         this.x = 0;
         this.y = 0;
@@ -57,13 +57,15 @@ public class Wolf extends Vector2 {
     }
     //</editor-fold>
 
-    public void initWolf(float positionXInPack, float positionYInPack) {
+    public void initWolf(float positionXInPack, float positionYInPack, int rowInPack, int colInPack) {
         this._iPositionXInPack = (int) positionXInPack;
         this._iPositionYInPack = (int) positionYInPack;
+        this._iRowInPack = rowInPack;
+        this._iColInPack = colInPack;
         //Provisional
         //TODO provisional
-        this.x = WolfPack.ms_iX + _iPositionXInPack;
-        this.y = WolfPack.ms_iY + _iPositionYInPack;
+        this.x = WolfPack.ms_fX + _iPositionXInPack;
+        this.y = WolfPack.ms_fY + _iPositionYInPack;
         setActive();
     }
 
@@ -71,10 +73,11 @@ public class Wolf extends Vector2 {
         if (_isAnimating) {
             changeFrame();
         } else if (_isActive) {
-            changeFrame();
             move();
             if (_isJumping) {
                 jump();
+            } else {
+                changeFrame();
             }
         } else if (_isDying) {
         }
@@ -96,44 +99,32 @@ public class Wolf extends Vector2 {
 
     //movement
     public void move() {
-        x = WolfPack.ms_iX + _iPositionXInPack;
-        if (!_isJumping
-                &&y < WolfPack.ms_iJumpPointRatio[1]
-                && y + ms_iHeight > WolfPack.ms_iJumpPointRatio[0]) {
+        x = (WolfPack.ms_fX + _iPositionXInPack);
+        if (y < WolfPack.ms_iJumpPoint
+                && y + ms_iHeight > WolfPack.ms_iJumpPoint) {
             _isJumping = true;
-            _isJumpingFrame1 = true;
+            _iActualFrame = 3;
         }
     }
     public int jumpCountDown;
     public final int JUMP_DURATION = (int) (1 * Main.SECOND);
-    public int jumpFrame1CountDown;
     public final int JUMP_FRAME1_DURATION = JUMP_DURATION / 4;
-    public int jumpFrame2CountDown;
-    public final int JUMP_FRAME2_DURATION = JUMP_DURATION / 2;
+    public final int JUMP_FRAME2_DURATION = JUMP_DURATION / 2 + JUMP_FRAME1_DURATION;
 
     public void jump() {
         jumpCountDown += Main.deltaTime;
-        if (_isJumpingFrame1) {
-            jumpFrame1CountDown += Main.deltaTime;
-        }
-        if (jumpFrame1CountDown > JUMP_FRAME1_DURATION) {
-            jumpFrame1CountDown = 0;
-            _isJumpingFrame1 = false;
-            _isJumpingFrame2 = true;
-        }
-        if (_isJumpingFrame2) {
-            jumpFrame2CountDown += Main.deltaTime;
-        }
-        if (jumpFrame2CountDown > JUMP_FRAME2_DURATION) {
-            jumpFrame2CountDown = 0;
-            _isJumpingFrame1 = true;
-            _isJumpingFrame2 = false;
-        }
-        if (jumpCountDown > JUMP_DURATION) {
-            jumpFrame1CountDown = 0;
-            _isJumpingFrame1 = false;
-            _isJumping = false;
+        if (jumpCountDown < JUMP_DURATION) {
+            if (jumpCountDown < JUMP_FRAME1_DURATION) {
+                _iActualFrame = 5;
+            } else if (jumpCountDown < JUMP_FRAME2_DURATION) {
+                _iActualFrame = 6;
+            } else {
+                _iActualFrame = 5;
+            }
+        } else {
             jumpCountDown = 0;
+            _iActualFrame = 3;
+            _isJumping = false;
         }
     }
 
@@ -146,50 +137,22 @@ public class Wolf extends Vector2 {
     }
 
     public void drawWolf(Graphics _g) {
-        _g.setColor(0, 0, 0);
-        _g.drawString("" + x, 20, 20);
-        if (_isJumping) {
-            if (_isJumpingFrame1) {
-                _g.setClip((int) x,
-                        (int) y,
-                        GfxManager.SPRITE_DATA[GfxManager.WOLF[5]][GfxManager.SPR_WIDTH],
-                        GfxManager.SPRITE_DATA[GfxManager.WOLF[5]][GfxManager.SPR_HEIGHT]);
-                _g.drawImage(
-                        GfxManager.ms_vImage[GfxManager.GFXID_WOLF],
-                        (int) x - GfxManager.SPRITE_DATA[GfxManager.WOLF[5]][GfxManager.SPR_POS_X],
-                        (int) y + ms_iHeight,
-                        0);
-            } else if (_isJumpingFrame2) {
-
-                _g.setClip((int) x,
-                        (int) y,
-                        GfxManager.SPRITE_DATA[GfxManager.WOLF[6]][GfxManager.SPR_WIDTH],
-                        GfxManager.SPRITE_DATA[GfxManager.WOLF[6]][GfxManager.SPR_HEIGHT]);
-                _g.drawImage(
-                        GfxManager.ms_vImage[GfxManager.GFXID_WOLF],
-                        (int) x - GfxManager.SPRITE_DATA[GfxManager.WOLF[6]][GfxManager.SPR_POS_X],
-                        (int) y + ms_iHeight,
-                        0);
-            }
-        } else {
-            _g.drawRect((int)x,
-                    (int)y,
-                    GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_WIDTH],
-                    GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_HEIGHT]);
-            _g.setClip((int) x,
-                    (int) y,
-                    GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_WIDTH],
-                    GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_HEIGHT]);
-            _g.drawImage(
-                    GfxManager.ms_vImage[GfxManager.GFXID_WOLF],
-                    (int) x - GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_POS_X],
-                    (int) y,
-                    0);
-
-            _g.setClip((int) 0,
-                    (int) 0,
-                    Define.BASE_SIZEX,
-                    Define.BASE_SIZEY);
-        }
+        _g.drawRect((int) x,
+                (int) y,
+                GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_WIDTH],
+                GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_HEIGHT]);
+        _g.setClip((int) x,
+                (int) y,
+                GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_WIDTH],
+                GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_HEIGHT]);
+        _g.drawImage(
+                GfxManager.ms_vImage[GfxManager.GFXID_WOLF],
+                (int) x - GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_POS_X],
+                (int) y - GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_POS_Y],
+                0);
+        _g.setClip((int) 0,
+                (int) 0,
+                Define.BASE_SIZEX,
+                Define.BASE_SIZEY);
     }
 }

@@ -13,26 +13,30 @@ import javak.microedition.lcdui.Graphics;
  */
 //TODO implement the wolfsquad and the wolves
 public class WolfPack {
-
-    public static int ms_iX = Define.BASE_SIZEX2;
-    public static int ms_iY = Define.BASE_SIZEY2;
-    public static int ms_iWidth;
+    
+    public static float  ms_fX = Define.BASE_SIZEX2;
+    public static float ms_fY = Define.BASE_SIZEY2;
+    public static int ms_iMaxWidth;
+    public static int ms_iFirstWolfX;
+    public static int ms_iFirstRow;
     public static int ms_iPackSpeedX;
     public static int ms_iPackSpeedY;
-    public static int[] ms_iJumpPointRatio = new int[2];
+    public static int ms_iJumpPoint;
+    public static boolean ms_isJumping;
     public static int ms_iWolvesAlive = 7;
     public static boolean ms_isInmortal;
-
+    
     public static void Run() {
-        packImputControll();
-        movePack();
+        packInputControll();
         jumpPointMovement();
+        movePack();
+        findFirstWolfRow();
+        checkWolvesJumping();
         if (ms_isInmortal) {
             inmortalTimeController();
         } else {
             collideWithObstacle();
         }
-
         for (int i = 0; i < ms_wolves.length; i++) {
             ms_wolves[i].Run();
         }
@@ -44,11 +48,11 @@ public class WolfPack {
     public static int[][] ms_iWolfPackPositions = {
         //the first dimension are rows and the second columns
         {0, 1, 0},
-        {1, 1, 1},
-        {1, 0, 1}
+        {0, 1, 1},
+        {0, 0, 1}
     };
-    public static Wolf[] ms_wolves = new Wolf[9];
-
+    public static Wolf[] ms_wolves = new Wolf[ms_iWolfPackPositions.length * ms_iWolfPackPositions[0].length];
+    
     public static void init() {
         for (int i = 0; i < ms_wolves.length; i++) {
             ms_wolves[i] = new Wolf();
@@ -58,20 +62,20 @@ public class WolfPack {
         }
         checkPackWidth();
     }
-
+    
     public static void placeWolfInPack(Wolf wolf) {
         for (int i = 0; i < ms_iWolfPackPositions.length; i++) {
             for (int e = 0; e < ms_iWolfPackPositions[i].length; e++) {
                 if (ms_iWolfPackPositions[i][e] == 1) {
-                    wolf.initWolf(wolf.ms_iWidth * e, (wolf.ms_iHeight / 2) * i);
+                    wolf.initWolf(wolf.ms_iWidth * e, (wolf.ms_iHeight / 2) * i, i, e);
                     ms_iWolfPackPositions[i][e] = 2;
                     return;
                 }
-
+                
             }
         }
     }
-
+    
     public static void checkPackWidth() {
         int _tempNumWolvesInCol = 0;
         for (int fila = 0; fila < ms_iWolfPackPositions.length; fila++) {
@@ -82,41 +86,67 @@ public class WolfPack {
                 }
             }
         }
-        ms_iWidth = (_tempNumWolvesInCol + 1) * Wolf.ms_iWidth;
+        ms_iMaxWidth = (_tempNumWolvesInCol + 1) * Wolf.ms_iWidth;
+    }
+    
+    public static void findFirstWolfRow() {
+        int tempPosX = Define.BASE_SIZEX;
+        for (int i = 0; i < ms_wolves.length; i++) {
+            if (ms_wolves[i]._isActive) {
+                if (ms_wolves[i].x < tempPosX) {
+                    tempPosX = (int) ms_wolves[i].x;
+                }
+            }
+        }
+        ms_iFirstWolfX = tempPosX;
+    }
+    
+    public static void checkWolvesJumping() {
+        for (int i = 0; i < ms_wolves.length; i++) {
+            if (ms_wolves[i]._isJumping) {
+                ms_isJumping = true;
+                break;
+            } else {
+                ms_isJumping = false;
+            }
+            
+        }
     }
     //Pack movement logic
     //<editor-fold defaultstate="collapsed" desc="movement">
 
-    public static void packImputControll() {
+    public static void packInputControll() {
         //Y
         ms_iPackSpeedY = (int) ((Define.BASE_SIZEY * Main.deltaTime) / Main.SECOND);
         //X
-        if (Main.GameKeyPressed(Main.KEYINT_RIGHT, false) && (ms_iX + ms_iWidth) < Define.BASE_SIZEX) {
-            ms_iPackSpeedX = Define.SIZEX / 2;
-        } else if (Main.GameKeyPressed(Main.KEYINT_LEFT, false) && ms_iX > 0) {
-            ms_iPackSpeedX = -Define.SIZEX / 2;
+        if (Main.GameKeyPressed(Main.KEYINT_RIGHT, false) && (ms_fX + ms_iMaxWidth) < Define.BASE_SIZEX) {
+            ms_iPackSpeedX = Define.BASE_SIZEX / 2;
+        } else if (Main.GameKeyPressed(Main.KEYINT_LEFT, false) && ms_iFirstWolfX > 0) {
+            ms_iPackSpeedX = -Define.BASE_SIZEX / 2;
         } else {
             ms_iPackSpeedX = 0;
         }
         if (Main.GameKeyPressed(Main.KEYINT_FIRE, true)) {
-            ms_iJumpPointRatio[0] = ms_iY;
-            ms_iJumpPointRatio[1] = Wolf.ms_iHeight;
+            ms_iJumpPoint =(int) ms_fY;
         }
     }
-
+    
     public static void movePack() {
-        ms_iX += (ms_iPackSpeedX * Main.deltaTime) / Main.SECOND;
-    }
-
-    public static void jumpPointMovement() {
-        if (ms_iJumpPointRatio[0] < Define.SIZEY) {
-            ms_iJumpPointRatio[0] += ms_iPackSpeedY;
-            ms_iJumpPointRatio[1] += ms_iPackSpeedY;
+        if (ms_isJumping) {
+            ms_fX +=  (((ms_iPackSpeedX/2) * Main.deltaTime) / Main.SECOND);
+        }else{
+             ms_fX +=  ((ms_iPackSpeedX * Main.deltaTime) / Main.SECOND);
         }
     }
+    
+    public static void jumpPointMovement() {
+        if (ms_iJumpPoint < Define.SIZEY) {
+            ms_iJumpPoint += ms_iPackSpeedY;
+        }
+    }
+
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="colisions">
-
     public static void collideWithObstacle() {
         //Check the whole array of tiles
         for (int i = 0; i < Scenario.ms_iTiles.length; i++) {
@@ -140,7 +170,7 @@ public class WolfPack {
             }
         }
     }
-
+    
     public static boolean checkColision(Wolf w, int obstX, int obstY, int obstWidth, int obstHeight) {
         if (w.y < obstY + obstHeight
                 && w.y + w.ms_iHeight > obstY
@@ -158,11 +188,14 @@ public class WolfPack {
     public static void killWolf(Wolf w) {
         w.setDying();
         ms_isInmortal = true;
+        ms_iWolfPackPositions[w._iPositionYInPack][w._iPositionXInPack] = 1;
         ms_iWolvesAlive--;
+        findFirstWolfRow();
+        checkPackWidth();
     }
     public static float ms_fInmortalityCountDown;
     public static final int INMORTALITY_DURATION = (int) (1 * Main.SECOND);
-
+    
     public static void inmortalTimeController() {
         ms_fInmortalityCountDown += Main.deltaTime;
         if (ms_fInmortalityCountDown > INMORTALITY_DURATION) {
@@ -173,7 +206,7 @@ public class WolfPack {
     //</editor-fold>
 
     public static void Draw(Graphics _g) {
-        _g.drawRect(0, ms_iJumpPointRatio[0], Define.BASE_SIZEX, ms_iJumpPointRatio[1]);
+        _g.drawRect(0, ms_iJumpPoint, Define.BASE_SIZEX, 2);
         for (int i = 0; i < ms_wolves.length; i++) {
             ms_wolves[i].Draw(_g);
         }

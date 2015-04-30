@@ -161,8 +161,8 @@ public class GfxManager {
         {GFXID_WOLF, 46,  0,    23,  58,   0,  0}, 
         {GFXID_WOLF, 69,  0,    23,  58,   0,  0}, 
         {GFXID_WOLF, 92,  0,    23,  58,   0,  0}, 
-        {GFXID_WOLF, 0,  58,    27,  134,   0,  0}, 
-        {GFXID_WOLF, 27, 58,    57,  134,   0,  0}, 
+        {GFXID_WOLF, 0,  58,    27,  68,   0,  0}, 
+        {GFXID_WOLF, 27, 58,    29,  76,   0,  0}, 
 
     };
     //#elif SIZE == "Extra"
