@@ -7,43 +7,41 @@ public class Define {
      * GAME STATES
      */
     // ModeInit States
+
     static final int ST_INIT_SPLASH = 0;
-    static final int ST_INIT_LANGUAGE = ST_INIT_SPLASH+1;
-    static final int ST_INIT_SOUND = ST_INIT_LANGUAGE+1;
-    
+    static final int ST_INIT_LANGUAGE = ST_INIT_SPLASH + 1;
+    static final int ST_INIT_SOUND = ST_INIT_LANGUAGE + 1;
     // ModeMenu States
-    static final int ST_MENU_MAIN = ST_INIT_SOUND+1;
-    static final int ST_MENU_OPTIONS = ST_MENU_MAIN+1;
-    static final int ST_MENU_LANGUAGE = ST_MENU_OPTIONS+1;
-    static final int ST_MENU_INFO = ST_MENU_LANGUAGE+1;
-    static final int ST_MENU_HELP = ST_MENU_INFO+1;
-    static final int ST_MENU_ABOUT = ST_MENU_HELP+1;
-    static final int ST_MENU_EXIT = ST_MENU_ABOUT+1;
-    static final int ST_MENU_PLAY = ST_MENU_EXIT+1;
-    
-    
+    static final int ST_MENU_MAIN = ST_INIT_SOUND + 1;
+    static final int ST_MENU_OPTIONS = ST_MENU_MAIN + 1;
+    static final int ST_MENU_LANGUAGE = ST_MENU_OPTIONS + 1;
+    static final int ST_MENU_INFO = ST_MENU_LANGUAGE + 1;
+    static final int ST_MENU_HELP = ST_MENU_INFO + 1;
+    static final int ST_MENU_ABOUT = ST_MENU_HELP + 1;
+    static final int ST_MENU_EXIT = ST_MENU_ABOUT + 1;
+    static final int ST_MENU_PLAY = ST_MENU_EXIT + 1;
     // ModeGame States
     static final int ST_GAME_INIT = 100;
-    static final int ST_GAME_PAUSE = ST_GAME_INIT+1;
-    static final int ST_GAME_RUNNING = ST_GAME_PAUSE+1;
+    static final int ST_GAME_PAUSE = ST_GAME_INIT + 1;
+    static final int ST_GAME_ANIMATING = ST_GAME_PAUSE + 1;
+    static final int ST_GAME_RUNNING = ST_GAME_ANIMATING + 1;
+    static final int ST_GAME_OVER = ST_GAME_RUNNING + 1;
     // COLORS
-    public static final int GREEN    = 0xff0ee50e;
-    public static final int RED      = 0xffA02020;
-    public static final int ORANGE   = 0xffff7800;
-    public static final int YELLOW   = 0xfffcff00;
-    public static final int PURPLE   = 0xffcc00ff;
-    public static final int BLUE     = 0xff202080;
-    public static final int WHITE    = 0xffffffff;
-    public static final int GREEN2   = 0xff0ee50e;
-    public static final int RED2     = 0xffA02020;
-    public static final int ORANGE2  = 0xffff7800;
-    public static final int YELLOW2  = 0xfffcff00;
-    public static final int PURPLE2  = 0xffcc00ff;
-    public static final int BLUE2    = 0xff202080;
-    public static final int WHITE2   = 0xffffffff;
+    public static final int GREEN = 0xff0ee50e;
+    public static final int RED = 0xffA02020;
+    public static final int ORANGE = 0xffff7800;
+    public static final int YELLOW = 0xfffcff00;
+    public static final int PURPLE = 0xffcc00ff;
+    public static final int BLUE = 0xff202080;
+    public static final int WHITE = 0xffffffff;
+    public static final int GREEN2 = 0xff0ee50e;
+    public static final int RED2 = 0xffA02020;
+    public static final int ORANGE2 = 0xffff7800;
+    public static final int YELLOW2 = 0xfffcff00;
+    public static final int PURPLE2 = 0xffcc00ff;
+    public static final int BLUE2 = 0xff202080;
+    public static final int WHITE2 = 0xffffffff;
     public static final int[] TRACE_COLORS = {0xff888888, 0xff777700, 0xffff7700, 0xffaa6600, 0xff7700cc};
-    
-
     public static char[] key_1 = new char[9];
     public static char[] key_2 = new char[9];
     public static char[] key_3 = new char[8];
@@ -55,7 +53,6 @@ public class Define {
     public static char[] key_9 = new char[9];
     public static char KEY_0 = '0';
     public static boolean lowerCase = true;
-    
     //SOFTKEYS
     static final int SK_NO_ICON = -1;
     static final int SK_PAUSE = 1;
@@ -64,13 +61,11 @@ public class Define {
     static final int SK_SHOT = 4;
     static int ms_iDrawSKLeft = SK_NO_ICON;
     static int ms_iDrawSKRight = SK_NO_ICON;
-    
     static int ms_iState, ms_iNewState, ms_iPrevState;
     static int ms_iStateTicks;
     static int ms_iStateFrames;
     static boolean ms_bNewState;
     static boolean ms_bNoDraw = true;  // Nothing will be drawn before first state is properly initialized
-    
     //game
     static int ms_iGameState;
     public static boolean ms_bPaused;
@@ -78,12 +73,10 @@ public class Define {
     static boolean ms_bFinishApp = false;
     public static String ms_sCriticalMesage = "";
     public static int ms_iCounter;
-    
     // Teclado virtual
     public static int contador = 0;
     public static char vector[] = new char[8];
     static long cycleStartTime;
-    
     public static final boolean CHEAT_AVAILABLE = false;
     public static final String ABOUT_TEXT[][] = {
         {
@@ -92,8 +85,7 @@ public class Define {
             " ",
             "Kitmaker Entertainment",
             "All rights reserved",
-            "Copyright 2015",
-        },
+            "Copyright 2015",},
         {
             "Team members",
             " ",
@@ -101,24 +93,19 @@ public class Define {
             "Toni Nicolau",
             "Luis Vald" + "\u00E9" + "s",
             "Sergio Rufo",
-            "B. Boselli",
-        }
+            "B. Boselli",}
     };
-    
     //Game constans:
     public static short TOTAL_LEVELS = 12;
     public static short MAX_ANIMALS_TRANS = 3;
     public static int MAX_BULLETS = 6;
-    
     // device info
     public static String DEVICE_MODEL;
     public static int COLOR_12_BIT = 4096;
     public static int COLOR_16_BIT = 65536;
     public static int DEVICE_NUMCOLORS;
     public static int DEVICE_NUMALPHAS;
-
     //Control frames:
-  
     //#if FPS == 10
 //#     public static final int FPS = 10;
     //#elif FPS == 15
@@ -126,25 +113,20 @@ public class Define {
     //#else
     public static final int FPS = 30;
     //#endif
-   
-    
     public static final int MAXFPS = 30;
     public static final int FP_BITS = 8;
-    public static final int FRAME_SPEED = (Define.MAXFPS/Define.FPS);//Fast 1,medium 2,slow 3
-    
+    public static final int FRAME_SPEED = (Define.MAXFPS / Define.FPS);//Fast 1,medium 2,slow 3
     //#if CLDC =="1.0"
     public static final long PI = 52707178; //MathFP.PI;
     //#else
 //#    public static final double PI = Math.PI;
     //#endif
-
     // performance settings
     //#if API == "Motorola" || OptHeap > 0
 //#     public static final boolean USE_SETCLIP_OVER_DRAWREGION = false;
     //#else
     public static final boolean USE_SETCLIP_OVER_DRAWREGION = true;
     //#endif
-    
     // ## Screen Width & Height ##
     //#if android
 //#     public static final short SIZEX = (short) (Settings.getWidth());
@@ -153,13 +135,11 @@ public class Define {
     public static final short SIZEX = Settings.SCR_WIDTH;
     public static final short SIZEY = Settings.SCR_HEIGHT;
     //#endif
-    
     //#if i900
 //#     public static final int i900_Y_ADJUSTMENT = 21;
     //#else
     public static final int i900_Y_ADJUSTMENT = 0;
     //#endif
-    
     public static final short SIZEX2 = (short) (SIZEX >> 1);
     public static final short SIZEX4 = (short) (SIZEX2 >> 1);
     public static final short SIZEX8 = (short) (SIZEX4 >> 1);
@@ -176,7 +156,6 @@ public class Define {
     public static final short SIZEY24 = (short) (SIZEY / 24);
     public static final short SIZEY32 = (short) (SIZEY16 >> 1);
     public static final short SIZEY64 = (short) (SIZEY32 >> 1);
-    
     public static final short BASE_SIZEX = 240;
     public static final short BASE_SIZEY = 320;
     public static final short BASE_SIZEX2 = (short) (BASE_SIZEX >> 1);
@@ -217,12 +196,10 @@ public class Define {
     public static boolean C_DOWN = false;
     public static boolean C_LEFT = false;
     public static boolean C_RIGHT = false;
-    
     public static final int iUP = 1;
     public static final int iDOWN = 2;
     public static final int iLEFT = 3;
     public static final int iRIGHT = 4;
-       
     /*
      * MESSAGES
      */
@@ -240,11 +217,8 @@ public class Define {
      */
     public static final boolean ON = true;
     public static final boolean OFF = false;
-
-
     public static final int ICON_SIZE_X = SIZEX4;
     public static final int ICON_SIZE_Y = SIZEY8;
-    
     //Splash coordenates:
     //#if ScreenWidth == 128 && ScreenHeight == 116
 //#     public static final int MIR_X = 98;
@@ -337,7 +311,6 @@ public class Define {
 //#         public static final int MIR_X = 395;
 //#         public static final int MIR_Y = 187;
     //#endif
-    
     //#if API == "BlackBerry"
 //#    public static final int LEFT_SOFTKEY_KEYCODE  = 1114112;
 //#    public static final int RIGHT_SOFTKEY_KEYCODE = 1179648;  

@@ -17,8 +17,9 @@ public class Scenario {
     public static final int TILE_WIDTH = GfxManager.TILE_DATA[0][GfxManager.SPR_WIDTH];
     public static int ms_iTiles[][] = new int[1 + Define.BASE_SIZEY / TILE_HEIGHT][1 + Define.BASE_SIZEX / TILE_WIDTH];
     public static int ms_iFirstTileY;
-    public static boolean _isSingleObstacle;
+    public static boolean isSingleObstacle;
     public static boolean _isBigObstacle;
+    public static boolean isObstacleComing;
     public static int ms_iObstacleRow;
     public static int ms_iActualRowToObstacle;
     public static int ms_iObstacleCol;
@@ -31,12 +32,21 @@ public class Scenario {
 
     public static void init() {
         ms_iFirstTileY = -GfxManager.TILE_DATA[0][GfxManager.SPR_HEIGHT];
-        generateObstacle();
-        _isSingleObstacle = true;
+        isSingleObstacle = true;
+        generateSmallObstacle();
     }
 
     public static void Run() {
-        moveTiles();
+
+        switch (Define.ms_iState) {
+            case Define.ST_GAME_ANIMATING:
+                moveTiles();
+                break;
+            case Define.ST_GAME_RUNNING:
+                checkObstacleIncome();
+                moveTiles();
+                break;
+        }
     }
 
     public static void moveTiles() {
@@ -53,36 +63,42 @@ public class Scenario {
                 }
             }
             ms_iFirstTileY = -TILE_HEIGHT;
+            ms_iActualRowToObstacle++;
             generateTiles();
-            if (!WolfPack.isAnimating) {
-                ms_iActualRowToObstacle++;
-            }
         }
     }
 
     public static int[] generateTiles() {
         //TODO implement bigObstacles
-//        if (_isSingleObstacle) {
         int[] nextRow = new int[ms_iTiles[0].length];
-        if (ms_iObstacleRow == ms_iActualRowToObstacle) {
-            for (int i = 0; i < ms_iTiles[0].length; i++) {
-                if (i == ms_iObstacleCol) {
-                    nextRow[i] = ms_iObstacle;
-                } else {
-                    nextRow[i] = GRASS_TILE;
+        if (isObstacleComing) {
+            if (isSingleObstacle) {
+                for (int i = 0; i < ms_iTiles[0].length; i++) {
+                    if (i == ms_iObstacleCol) {
+                        nextRow[i] = ms_iObstacle;
+                    } else {
+                        nextRow[i] = GRASS_TILE;
+                    }
                 }
             }
-            generateObstacle();
+            generateSmallObstacle();
+            ms_iActualRowToObstacle = 0;
+            isObstacleComing = false;
         } else {
             for (int i = 0; i < ms_iTiles[0].length; i++) {
                 nextRow[i] = GRASS_TILE;
             }
         }
         return nextRow;
-//        }
     }
 
-    public static void generateObstacle() {
+    public static void checkObstacleIncome() {
+        if (ms_iObstacleRow <= ms_iActualRowToObstacle) {
+            isObstacleComing = true;
+        }
+    }
+
+    public static void generateSmallObstacle() {
         ms_iActualRowToObstacle = 0;
         ms_iObstacleRow = Main.Random(MIN_ROW_TO_OBSTACLE, MAX_ROW_TO_OBSTACLE);
         ms_iObstacleCol = Main.Random(0, ms_iTiles[0].length);

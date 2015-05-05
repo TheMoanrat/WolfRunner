@@ -13,84 +13,61 @@ import javak.microedition.lcdui.Graphics;
  */
 public class Wolf extends Vector2 {
 
-    public boolean isWaiting;
-    public boolean _isAnimating;
-    public boolean _isActive;
-    public boolean _isDying;
-    public boolean _isJumping;
-    public int _iActualFrame = 0;
-    public static int ms_iWidth = GfxManager.SPRITE_DATA[GfxManager.WOLF[0]][GfxManager.SPR_WIDTH];
-    public static int ms_iHeight = GfxManager.SPRITE_DATA[GfxManager.WOLF[0]][GfxManager.SPR_HEIGHT];
-    public int _iPositionXInPack;
-    public int _iPositionYInPack;
-    public int _iColInPack;
-    public int _iRowInPack;
+    public int state;
+    public static final int ST_WOLF_WAITING = 1;
+    public static final int ST_WOLF_ANIMATING = ST_WOLF_WAITING + 1;
+    public static final int ST_WOLF_ACTIVE = ST_WOLF_ANIMATING + 1;
+    public static final int ST_WOLF_DYING = ST_WOLF_ACTIVE + 1;
+    public boolean isJumping;
+    public boolean isFirstAnimation;
+    public int actualFrame = 0;
+    public static int width = GfxManager.SPRITE_DATA[GfxManager.WOLF[0]][GfxManager.SPR_WIDTH];
+    public static int height = GfxManager.SPRITE_DATA[GfxManager.WOLF[0]][GfxManager.SPR_HEIGHT];
+    public int colInPack;
+    public int rowInPack;
     public int iSpawnTimelapse;
+    public int actualPositionX;
+    public int actualPositionY;
 
     public Wolf() {
-        super(-ms_iWidth, -ms_iHeight);
-    }
-    //<editor-fold defaultstate="collapsed" desc="State changes">
-
-    public void setActive() {
-        _isActive = true;
-        _isAnimating = false;
-        _isDying = false;
-        isWaiting = false;
+        super(-width, -height);
     }
 
-    public void setAnimating() {
-        _isActive = false;
-        _isAnimating = true;
-        _isDying = false;
-        isWaiting = false;
-    }
-
-    public void setDying() {
-        _isActive = false;
-        _isAnimating = false;
-        _isDying = true;
-        isWaiting = false;
-    }
-
-    public void setWaiting() {
-        _isActive = false;
-        _isAnimating = false;
-        _isDying = false;
-        isWaiting = true;
-    }
-
-    public void setInactive() {
-        _isActive = false;
-        _isAnimating = false;
-        _isDying = false;
-        isWaiting = false;
-    }
-    //</editor-fold>
-
-    public void initWolf(float positionXInPack, float positionYInPack, int rowInPack, int colInPack, int spawnTimelapse) {
-        this._iPositionXInPack = (int) positionXInPack;
-        this._iPositionYInPack = (int) positionYInPack;
-        this._iRowInPack = rowInPack;
-        this._iColInPack = colInPack;
+    public void initWolf(int rowInPack, int colInPack, int spawnTimelapse) {
+        this.rowInPack = rowInPack;
+        this.colInPack = colInPack;
+        this.x = (int) (WolfPack.x - ((WolfPack.ms_iWolfPackPositions[0].length / 2) * width) + (width / 2) + (colInPack * width));
+        this.y = (int) rowInPack * (height) + WolfPack.y;
         this.iSpawnTimelapse = spawnTimelapse;
-        setWaiting();
+        state = ST_WOLF_WAITING;
+        initFirstSpawnAnimation();
+        isFirstAnimation = true;
     }
 
     public void Run() {
-        if (isWaiting) {
-            spawnDelayController();
-        } else if (_isAnimating) {
-            changeFrame();
-            animateFirstSpawn();
-        } else if (_isActive) {
-            move();
-            if (_isJumping) {
-                jump();
-            } else {
+        switch (state) {
+            case ST_WOLF_WAITING:
+                spawnDelayController();
+                break;
+            case ST_WOLF_ANIMATING:
+                if (isFirstAnimation) {
+                    animateFirstSpawn();
+                }
                 changeFrame();
-            }
-        } else if (_isDying) {
+                break;
+            case ST_WOLF_ACTIVE:
+                move();
+                if (isJumping) {
+                    jump();
+                } else {
+                    if (!WolfPack.isInmortal) {
+                        collideWithObstacle();
+                    }
+                    changeFrame();
+                }
+                break;
+            case ST_WOLF_DYING:
+                break;
         }
     }
     //Change frame over time to animate wolf
@@ -101,9 +78,9 @@ public class Wolf extends Vector2 {
         frameTimeRemaining += Main.deltaTime;
         if (frameTimeRemaining >= FRAME_LIFETIME) {
             frameTimeRemaining = 0;
-            _iActualFrame++;
-            if (_iActualFrame > 4) {
-                _iActualFrame = 0;
+            actualFrame++;
+            if (actualFrame > 4) {
+                actualFrame = 0;
             }
         }
     }
@@ -112,81 +89,82 @@ public class Wolf extends Vector2 {
     public void spawnDelayController() {
         spawnCountdown += Main.deltaTime;
         if (spawnCountdown > iSpawnTimelapse) {
-            initFirstSpawnAnimation();
+            spawnCountdown = 0;
+            state = ST_WOLF_ANIMATING;
         }
     }
     public BezierCurve _bez;
-    public long _iAnimElapsedTime;
+    public long animElapsedTime;
     public final int ANIMATION_DURATION = (int) (3 * Main.SECOND);
     public Vector2 _temporalPosition = new Vector2();
 
     public void initFirstSpawnAnimation() {
-        setAnimating();
-        if (_iColInPack < WolfPack.ms_iWolfPackPositions.length / 2) {
+        if (colInPack < WolfPack.ms_iWolfPackPositions.length / 2) {
             _bez = new BezierCurve(
                     //primer punto
-                    -ms_iWidth,
+                    -width,
                     Define.BASE_SIZEY2,
                     //Segundo punto
                     Define.BASE_SIZEX2,
                     Define.BASE_SIZEY2,
                     //Tercer punto
-                    (int) (Define.BASE_SIZEX2 - WolfPack.ms_fX),
-                    (int) (_iPositionYInPack + WolfPack.ms_fY),
+                    Define.BASE_SIZEX2,
+                    (int) (y),
                     //Quarto punto
-                    (int) (_iPositionXInPack + WolfPack.ms_fX),
-                    (int) (_iPositionYInPack + WolfPack.ms_fY));
-        } else if (_iColInPack > WolfPack.ms_iWolfPackPositions.length / 2) {
+                    (int) (x),
+                    (int) (y));
+        } else if (colInPack > WolfPack.ms_iWolfPackPositions[0].length / 2) {
             _bez = new BezierCurve(
                     //primer punto
-                    Define.BASE_SIZEX + ms_iWidth,
+                    Define.BASE_SIZEX + width,
                     Define.BASE_SIZEY2,
                     //Segundo punto
-                    Define.BASE_SIZEX4 + Define.BASE_SIZEX2,
+                    Define.BASE_SIZEX2 + Define.BASE_SIZEX4,
                     Define.BASE_SIZEY2,
                     //Tercer punto
-                    (int) (WolfPack.ms_fX + Define.BASE_SIZEX4) + Define.BASE_SIZEX2,
-                    (int) (_iPositionYInPack + WolfPack.ms_fY),
+                    Define.BASE_SIZEX2 + Define.BASE_SIZEX4,
+                    (int) (y),
                     //Quarto punto
-                    (int) (_iPositionXInPack + WolfPack.ms_fX),
-                    (int) (_iPositionYInPack + WolfPack.ms_fY));
+                    (int) (x),
+                    (int) y);
         } else {
             _bez = new BezierCurve(
                     //primer punto
                     Define.BASE_SIZEX2,
-                    Define.BASE_SIZEY + ms_iHeight,
+                    Define.BASE_SIZEY + height,
                     //Segundo punto
                     Define.BASE_SIZEX2,
-                    Define.BASE_SIZEY - ms_iHeight,
+                    Define.BASE_SIZEY - height,
                     //Tercer punto
-                    _iPositionXInPack + ((Define.BASE_SIZEX - _iPositionXInPack) / 2),
-                    _iPositionYInPack + ((Define.BASE_SIZEY - _iPositionYInPack) / 2),
+                    (int) x,
+                    (int) (y + ((Define.BASE_SIZEY - y) / 2)),
                     //Quarto punto
-                    (int) (_iPositionXInPack + WolfPack.ms_fX),
-                    (int) (_iPositionYInPack + WolfPack.ms_fY));
+                    (int) x,
+                    (int) y);
         }
     }
 
     public void animateFirstSpawn() {
-        _iAnimElapsedTime += Main.deltaTime;
-        float elapsedTimeNormalized = (float) _iAnimElapsedTime / ANIMATION_DURATION;
+        animElapsedTime += Main.deltaTime;
+        float elapsedTimeNormalized = (float) animElapsedTime / ANIMATION_DURATION;
         if (elapsedTimeNormalized < 1) {
             _bez.getPos(elapsedTimeNormalized, _temporalPosition);
             x = _temporalPosition.x;
             y = _temporalPosition.y;
         } else {
-            _iAnimElapsedTime = 0;
-            setActive();
+            animElapsedTime = 0;
+            isFirstAnimation = false;
+            state = ST_WOLF_ACTIVE;
         }
     }
 
     //movement
     public void move() {
-        x = (WolfPack.ms_fX + _iPositionXInPack);
-        if (y < WolfPack.ms_iJumpPoint
-                && y + ms_iHeight > WolfPack.ms_iJumpPoint) {
-            _isJumping = true;
-            _iActualFrame = 3;
+        x = (int) (WolfPack.x - ((WolfPack.ms_iWolfPackPositions[0].length / 2) * width) + (width / 2) + (colInPack * width));
+        if (y < WolfPack.jumpPoint
+                && y + height > WolfPack.jumpPoint) {
+            isJumping = true;
+            actualFrame = 3;
         }
     }
     public int jumpCountDown;
@@ -198,37 +176,73 @@ public class Wolf extends Vector2 {
         jumpCountDown += Main.deltaTime;
         if (jumpCountDown < JUMP_DURATION) {
             if (jumpCountDown < JUMP_FRAME1_DURATION) {
-                _iActualFrame = 5;
+                actualFrame = 5;
             } else if (jumpCountDown < JUMP_FRAME2_DURATION) {
-                _iActualFrame = 6;
+                actualFrame = 6;
             } else {
-                _iActualFrame = 5;
+                actualFrame = 5;
             }
         } else {
             jumpCountDown = 0;
-            _iActualFrame = 3;
-            _isJumping = false;
+            actualFrame = 3;
+            isJumping = false;
         }
     }
 
-    public void Draw(Graphics _g) {
-        if (_isAnimating) {
-            drawWolf(_g);
-        } else if (_isActive) {
-            drawWolf(_g);
-        } else if (_isDying) {
+    public void collideWithObstacle() {
+        //Check the whole array of tiles
+        for (int i = 0; i < Scenario.ms_iTiles.length; i++) {
+            for (int e = 0; e < Scenario.ms_iTiles[i].length; e++) {
+                //checking tiles alive
+                switch (Scenario.ms_iTiles[i][e]) {
+                    case Scenario.ROCK_TILE:
+                        //check the wolves array
+                        if (checkColision(
+                                Scenario.TILE_WIDTH * e,
+                                Scenario.ms_iFirstTileY + (Scenario.TILE_HEIGHT * i),
+                                Scenario.TILE_WIDTH,
+                                Scenario.TILE_HEIGHT)) {
+                            WolfPack.killWolf(this);
+                            break;
+                        }
+                }
+            }
+        }
+    }
+
+    public boolean checkColision(int obstX, int obstY, int obstWidth, int obstHeight) {
+        if (y < obstY + obstHeight
+                && y + height > obstY
+                && x < obstX + obstWidth
+                && x + width > obstX
+                && !isJumping) {
+            return true;
+        }
+        return false;
+    }
+
+    public void Draw(Graphics g) {
+        switch (state) {
+            case ST_WOLF_WAITING:
+                break;
+            case ST_WOLF_ANIMATING:
+            case ST_WOLF_ACTIVE:
+                drawWolf(g);
+                break;
+            case ST_WOLF_DYING:
+                break;
         }
     }
 
     public void drawWolf(Graphics _g) {
         _g.setClip((int) x,
                 (int) y,
-                GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_WIDTH],
-                GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_HEIGHT]);
+                GfxManager.SPRITE_DATA[GfxManager.WOLF[actualFrame]][GfxManager.SPR_WIDTH],
+                GfxManager.SPRITE_DATA[GfxManager.WOLF[actualFrame]][GfxManager.SPR_HEIGHT]);
         _g.drawImage(
                 GfxManager.ms_vImage[GfxManager.GFXID_WOLF],
-                (int) x - GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_POS_X],
-                (int) y - GfxManager.SPRITE_DATA[GfxManager.WOLF[_iActualFrame]][GfxManager.SPR_POS_Y],
+                (int) x - GfxManager.SPRITE_DATA[GfxManager.WOLF[actualFrame]][GfxManager.SPR_POS_X],
+                (int) y - GfxManager.SPRITE_DATA[GfxManager.WOLF[actualFrame]][GfxManager.SPR_POS_Y],
                 0);
         _g.setClip((int) 0,
                 (int) 0,

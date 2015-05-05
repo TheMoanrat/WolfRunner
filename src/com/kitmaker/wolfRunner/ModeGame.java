@@ -19,8 +19,6 @@ public class ModeGame extends Define {
     public static String ms_sDebugText = "";
     public static int ms_iInc = 0;
     private static boolean ms_isToGameExit = false;
-    public static final int MODE_FREE = 0;
-    public static final int MODE_MISSION = 1;
     // GAME PAUSE menu //-----------------------------------------------------------
     private static int ms_iMenuItems;
     static final byte[] PAUSE_TITLES = {
@@ -100,6 +98,7 @@ public class ModeGame extends Define {
                 WolfPack.init();
                 Scenario.init();
                 break;
+            case Define.ST_GAME_ANIMATING:
             case Define.ST_GAME_RUNNING:
 //                initGame();
                 break;
@@ -124,6 +123,8 @@ public class ModeGame extends Define {
 
                 GfxManager.LoadGraphics(true);
                 break;
+            case Define.ST_GAME_ANIMATING:
+
             case Define.ST_GAME_RUNNING:
                 break;
         }
@@ -133,6 +134,8 @@ public class ModeGame extends Define {
         switch (Define.ms_iState) {
             case Define.ST_GAME_INIT:
                 break;
+            case Define.ST_GAME_ANIMATING:
+
             case Define.ST_GAME_RUNNING:
                 Scenario.Draw(_g);
                 WolfPack.Draw(_g);
@@ -161,8 +164,9 @@ public class ModeGame extends Define {
         switch (Define.ms_iState) {
             // rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
             case Define.ST_GAME_INIT:
-                Main.RequestStateChange(Define.ST_GAME_RUNNING);
+                Main.RequestStateChange(Define.ST_GAME_ANIMATING);
                 break;
+            case Define.ST_GAME_ANIMATING:
             case Define.ST_GAME_RUNNING:
                 Scenario.Run();
                 WolfPack.Run();
