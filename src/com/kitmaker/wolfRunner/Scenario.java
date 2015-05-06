@@ -46,6 +46,8 @@ public class Scenario {
                 checkObstacleIncome();
                 moveTiles();
                 break;
+            case Define.ST_GAME_OVER:
+                moveTiles();
         }
     }
 

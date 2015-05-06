@@ -114,6 +114,31 @@ public class ModeGame extends Define {
             level++;
         }
     }
+
+    private static void loadGameImages() {
+        GfxManager.ResetGraphics();
+
+        switch (Define.ms_iState) {
+
+            case Define.ST_GAME_INIT:
+                //GfxManager.AddGraphic(GfxManager.GFXID_TILESET);
+                GfxManager.AddGraphic(GfxManager.GFXID_GRASSTILE);
+                GfxManager.AddGraphic(GfxManager.GFXID_SIDE_TREETILE);
+                GfxManager.AddGraphic(GfxManager.GFXID_ROCKTILE);
+                GfxManager.AddGraphic(GfxManager.GFXID_WOLF);
+                GfxManager.AddGraphic(GfxManager.GFXID_SK_NEXT);
+                GfxManager.AddGraphic(GfxManager.GFXID_MENU_BUTTONS);
+                GfxManager.AddGraphic(GfxManager.GFXID_LIFES_ICON);
+
+
+                GfxManager.LoadGraphics(true);
+                break;
+            case Define.ST_GAME_ANIMATING:
+
+            case Define.ST_GAME_RUNNING:
+                break;
+        }
+    }
     private static final int OPT_RESTART_GAME = 0;
     private static final int OPT_BACK_TO_MENU = OPT_RESTART_GAME + 1;
     private static int gameOverMenuOption = OPT_RESTART_GAME;
@@ -143,29 +168,6 @@ public class ModeGame extends Define {
      * load the images used during the gameplay
      */
 
-    private static void loadGameImages() {
-        GfxManager.ResetGraphics();
-
-        switch (Define.ms_iState) {
-
-            case Define.ST_GAME_INIT:
-                //GfxManager.AddGraphic(GfxManager.GFXID_TILESET);
-                GfxManager.AddGraphic(GfxManager.GFXID_GRASSTILE);
-                GfxManager.AddGraphic(GfxManager.GFXID_SIDE_TREETILE);
-                GfxManager.AddGraphic(GfxManager.GFXID_ROCKTILE);
-                GfxManager.AddGraphic(GfxManager.GFXID_WOLF);
-                GfxManager.AddGraphic(GfxManager.GFXID_SK_NEXT);
-                GfxManager.AddGraphic(GfxManager.GFXID_MENU_BUTTONS);
-
-                GfxManager.LoadGraphics(true);
-                break;
-            case Define.ST_GAME_ANIMATING:
-
-            case Define.ST_GAME_RUNNING:
-                break;
-        }
-    }
-
     static void Run() {
         switch (Define.ms_iState) {
             // rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
@@ -173,11 +175,13 @@ public class ModeGame extends Define {
                 Main.RequestStateChange(Define.ST_GAME_ANIMATING);
                 break;
             case Define.ST_GAME_ANIMATING:
+                Scenario.Run();
+                WolfPack.Run();
+                break;
             case Define.ST_GAME_RUNNING:
                 Scenario.Run();
                 WolfPack.Run();
                 changeLevel();
-
                 break;
             case Define.ST_GAME_OVER:
                 Scenario.Run();
@@ -218,80 +222,37 @@ public class ModeGame extends Define {
                 Define.BASE_SIZEY,
                 Graphics.BOTTOM);
         g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
-        if (gameOverMenuOption == OPT_RESTART_GAME) {
-            //first box
-            g.setClip(Define.BASE_SIZEX2 - (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_WIDTH] / 2),
-                    Define.BASE_SIZEY4,
-                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_WIDTH],
-                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_HEIGHT]);
-            g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_MENU_BUTTONS],
-                    Define.BASE_SIZEX2,
-                    Define.BASE_SIZEY4 - GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_POS_Y],
-                    Graphics.HCENTER);
-            //box text
-            FntManager.DrawFont(g,
-                    FntManager.FONT_ACTIVE,
-                    TxtManager.ms_vText[TxtManager.TXT_CONTINUE_PLAY],
-                    Define.BASE_SIZEX2,
-                    Define.BASE_SIZEY4 + (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_HEIGHT] / 2),
-                    Graphics.HCENTER | Graphics.VCENTER,
-                    TxtManager.ms_vText[TxtManager.TXT_CONTINUE_PLAY].length());
-            g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
-            //second box
-            g.setClip(Define.BASE_SIZEX2 - (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_WIDTH] / 2),
-                    Define.BASE_SIZEY2,
-                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_WIDTH],
-                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_HEIGHT]);
-            g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_MENU_BUTTONS],
-                    Define.BASE_SIZEX2,
-                    Define.BASE_SIZEY2,
-                    Graphics.HCENTER);
-            //2nd box text
-            FntManager.DrawFont(g,
-                    FntManager.FONT_INACTIVE,
-                    TxtManager.ms_vText[TxtManager.TXT_EXIT_RUN],
-                    Define.BASE_SIZEX2,
-                    Define.BASE_SIZEY2 + (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_HEIGHT] / 2),
-                    Graphics.HCENTER | Graphics.VCENTER,
-                    TxtManager.ms_vText[TxtManager.TXT_EXIT_RUN].length());
-            g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
 
-        } else if (gameOverMenuOption == OPT_BACK_TO_MENU) {
-            // First box 
-            g.setClip(Define.BASE_SIZEX2 - (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_WIDTH] / 2),
-                    Define.BASE_SIZEY4,
-                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_WIDTH],
-                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_HEIGHT]);
-            g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_MENU_BUTTONS],
-                    Define.BASE_SIZEX2,
-                    Define.BASE_SIZEY4,
-                    Graphics.HCENTER);
-            // 1st box text 
-            FntManager.DrawFont(g,
-                    FntManager.FONT_INACTIVE,
-                    TxtManager.ms_vText[TxtManager.TXT_CONTINUE_PLAY],
-                    Define.BASE_SIZEX2,
-                    Define.BASE_SIZEY4 + (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_HEIGHT] / 2),
-                    Graphics.HCENTER | Graphics.VCENTER,
-                    TxtManager.ms_vText[TxtManager.TXT_CONTINUE_PLAY].length());
-            g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
-            //Second box
-            g.setClip(Define.BASE_SIZEX2 - (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_WIDTH] / 2),
-                    Define.BASE_SIZEY2,
-                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_WIDTH],
-                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_HEIGHT]);
-            g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_MENU_BUTTONS],
-                    Define.BASE_SIZEX2,
-                    Define.BASE_SIZEY2 - GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_POS_Y],
-                    Graphics.HCENTER);
-            FntManager.DrawFont(g,
-                    FntManager.FONT_ACTIVE,
-                    TxtManager.ms_vText[TxtManager.TXT_EXIT_RUN],
-                    Define.BASE_SIZEX2,
-                    Define.BASE_SIZEY2 + (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_HEIGHT] / 2),
-                    Graphics.HCENTER | Graphics.VCENTER,
-                    TxtManager.ms_vText[TxtManager.TXT_EXIT_RUN].length());
-            g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
+        drawGameOvermenuOption(g, gameOverMenuOption == OPT_RESTART_GAME,Define.BASE_SIZEY4,TxtManager.TXT_EXIT_RUN);
+        drawGameOvermenuOption(g, gameOverMenuOption == OPT_BACK_TO_MENU,Define.BASE_SIZEY2, TxtManager.TXT_PLAY_AGAIN);
+    }
+
+    public static void drawGameOvermenuOption(Graphics g, boolean isActive, int y, int textIndex) {
+        int font, button;
+
+        if (isActive) {
+            font = FntManager.FONT_ACTIVE;
+            button = 1;
+        } else {
+            font = FntManager.FONT_INACTIVE;
+            button = 0;
         }
+        g.setClip(Define.BASE_SIZEX2 - (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[button]][GfxManager.SPR_WIDTH] / 2),
+                y,
+                GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[button]][GfxManager.SPR_WIDTH],
+                GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[button]][GfxManager.SPR_HEIGHT]);
+        g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_MENU_BUTTONS],
+                Define.BASE_SIZEX2,
+                y - GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[button]][GfxManager.SPR_POS_Y],
+                Graphics.HCENTER);
+        FntManager.DrawFont(g,
+                font,
+                TxtManager.ms_vText[textIndex],
+                Define.BASE_SIZEX2,
+                y + (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[button]][GfxManager.SPR_HEIGHT] / 2),
+                Graphics.HCENTER | Graphics.VCENTER,
+                TxtManager.ms_vText[textIndex].length());
+        g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
+
     }
 }

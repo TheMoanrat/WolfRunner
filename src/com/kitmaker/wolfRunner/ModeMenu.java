@@ -108,7 +108,7 @@ public class ModeMenu extends Define {
     };
     // Comfirm play //--------------------------------------------------------------
     static final short[][] MENU_CONTINUE_NEW = {
-        {TxtManager.TXT_CONTINUE_PLAY},
+        {TxtManager.TXT_PLAY_AGAIN},
         {TxtManager.TXT_NEW_GAME}
     };
     // Warning play //--------------------------------------------------------------

@@ -5,6 +5,7 @@
 package com.kitmaker.wolfRunner;
 
 import com.kitmaker.manager.FntManager;
+import com.kitmaker.manager.GfxManager;
 import javak.microedition.lcdui.Graphics;
 
 /**
@@ -23,7 +24,13 @@ public class Hud {
     }
 
     public static void drawLifes(Graphics g) {
-        FntManager.DrawFont(g, FntManager.FONT_INGAME, WolfPack.wolfLives + "", Define.BASE_SIZEX24, Define.BASE_SIZEY24, 0, 2);
+        g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_LIFES_ICON], Define.BASE_SIZEX24, Define.BASE_SIZEY24, 0);
+        FntManager.DrawFont(g, FntManager.FONT_INGAME,
+                "x"+WolfPack.wolfLives ,
+                Define.BASE_SIZEX24+GfxManager.SPRITE_DATA[GfxManager.LIFES_ICON[0]][GfxManager.SPR_WIDTH],
+                Define.BASE_SIZEY24,
+                0,
+                2);
     }
 
     public static void drawPoints(Graphics g) {

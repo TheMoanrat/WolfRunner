@@ -42,6 +42,6 @@ Misión
 Objetivo
 Volver
 ¡Completado!
-¿Deseas abandonar y volver al mapa?
-Continuar
+Volver al menu
+Volver a intentar
 Nueva misión

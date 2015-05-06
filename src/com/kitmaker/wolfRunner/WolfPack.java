@@ -14,8 +14,8 @@ import javak.microedition.lcdui.Graphics;
 //TODO implement the wolfsquad and the wolves
 public class WolfPack {
 
-    public static float x = Define.BASE_SIZEX2;
-    public static float y = Define.BASE_SIZEY2;
+    public static float x;
+    public static float y;
     public static int maxWidth;
     public static int ms_iFirstWolfX;
     public static int ms_iFirstRow;
@@ -69,6 +69,8 @@ public class WolfPack {
 
     public static void init() {
         wolfLives = 3;
+        x = Define.BASE_SIZEX2;
+        y = Define.BASE_SIZEY2;
         for (int i = 0; i < ms_wolves.length; i++) {
             ms_wolves[i] = new Wolf();
         }

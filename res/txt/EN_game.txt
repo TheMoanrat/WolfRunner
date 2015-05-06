@@ -42,6 +42,6 @@ Mission
 Objective
 Return
 Completed!
-Return to the menu? All unsaved changes will be lost.
-Continue
+Back to menu
+Retry
 New mission
