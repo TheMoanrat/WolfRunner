@@ -60,9 +60,6 @@ public class GfxManager {
         GFX_PREV + "sk_menu" + GFX_FORMAT,       //03
         GFX_PREV + "sk_next" + GFX_FORMAT,       //04
         GFX_PREV + "sk_reset" + GFX_FORMAT,      //05
-        //Backgrounds
-        GFX_PREV + "bground1" + GFX_FORMAT,       //06
-        GFX_PREV + "bground2" + GFX_FORMAT,       //07
         //Wolves
         GFX_PREV + "wolfbrown" + GFX_FORMAT,       //08
         GFX_PREV + "grasstile" + GFX_FORMAT,       //09
@@ -94,15 +91,13 @@ public class GfxManager {
     public static final int GFXID_SK_MENU = 3;
     public static final int GFXID_SK_NEXT = 4;
     public static final int GFXID_SK_RESET = 5;
-    //Background
-    public static final int GFXID_BGROUND1 = 6;
-    public static final int GFXID_BGROUND2 = 7;
+
     //Wolves
-    public static final int GFXID_WOLF = 8;
+    public static final int GFXID_WOLF = 6;
     //Tiles
-    public static final int GFXID_GRASSTILE = 9;
-    public static final int GFXID_SIDE_TREETILE = 10;
-    public static final int GFXID_ROCKTILE = 11;
+    public static final int GFXID_GRASSTILE = 7;
+    public static final int GFXID_SIDE_TREETILE = 8;
+    public static final int GFXID_ROCKTILE = 9;
 
 
     public static final int SPR_ID = 0;
@@ -120,11 +115,9 @@ public class GfxManager {
     public static final int SPRID_SK_MENU = 4;
     public static final int SPRID_SK_NEXT = 8;
     public static final int SPRID_SK_RESET = 10;
-    //Background
-    public static final int SPRID_BGROUND1 = 12;
-    public static final int SPRID_BGROUND2 = 13;
+
     //Wolves
-    public static final int SPRID_WOLF= 14;
+    public static final int SPRID_WOLF= 12;
     
 
     
@@ -136,33 +129,36 @@ public class GfxManager {
 //#     };
     //#elif SIZE == "Large"
     public static short[][] SPRITE_DATA = {
-        {GFXID_MENU_BUTTONS,  0,  0,    14,  19,   0,  0}, 
-        {GFXID_MENU_BUTTONS,  0,  0,    21,  19,   0,  0}, 
+        {GFXID_MENU_BUTTONS,  0,  0,    182,  40,   0,  0}, 
+        {GFXID_MENU_BUTTONS,  0,  40,    182,  40,   0,  0}, 
         
-        {GFXID_SK_HOME,  0,  0,    14,  19,   0,  0}, 
-        {GFXID_SK_HOME,  0,  0,    21,  19,   0,  0}, 
+        {GFXID_SK_HOME,  0,  0,    46,  46,   0,  0}, 
+        {GFXID_SK_HOME,  0,  46,    46,  46,   0,  0}, 
         
-        {GFXID_SK_MENU,  0,  0,    14,  19,   0,  0}, 
-        {GFXID_SK_MENU,  0,  0,    21,  19,   0,  0}, 
-        {GFXID_SK_MENU,  0,  0,    14,  19,   0,  0}, 
-        {GFXID_SK_MENU,  0,  0,    21,  19,   0,  0}, 
+        {GFXID_SK_MENU,  0,  0,    46,  46,   0,  0}, 
+        {GFXID_SK_MENU,  0,  46,    46,  46,   0,  0}, 
+        {GFXID_SK_MENU,  46,  0,    46,  46,   0,  0}, 
+        {GFXID_SK_MENU,  46, 46,    46,  46,   0,  0}, 
         
-        {GFXID_SK_NEXT,  0,  0,    14,  19,   0,  0}, 
-        {GFXID_SK_NEXT,  0,  0,    21,  19,   0,  0}, 
+        {GFXID_SK_NEXT,  0,  0,    46,  46,   0,  0}, 
+        {GFXID_SK_NEXT,  0,  46,    46,  46,   0,  0}, 
         
-        {GFXID_SK_RESET, 0,  0,    14,  19,   0,  0}, 
-        {GFXID_SK_RESET, 0,  0,    21,  19,   0,  0}, 
-        
-        {GFXID_BGROUND1, 0,  0,    240,  320,   0,  0}, 
-        {GFXID_BGROUND2, 0,  0,    240,  320,   0,  0},
-        
+        {GFXID_SK_RESET, 0,  0,    46,  46,   0,  0}, 
+        {GFXID_SK_RESET, 0,  46,    46,  46,   0,  0}, 
+
+        //1,2,3,4 Wolf runing
+        //5,6, Wolf jumping
+        //7,8 ,9 Wolf dead
         {GFXID_WOLF,  0,  0,    23,  58,   0,  0}, 
         {GFXID_WOLF, 23,  0,    23,  58,   0,  0}, 
         {GFXID_WOLF, 46,  0,    23,  58,   0,  0}, 
         {GFXID_WOLF, 69,  0,    23,  58,   0,  0}, 
         {GFXID_WOLF, 92,  0,    23,  58,   0,  0}, 
-        {GFXID_WOLF, 0,  58,    27,  68,   0,  0}, 
-        {GFXID_WOLF, 27, 58,    29,  76,   0,  0}, 
+        {GFXID_WOLF, 115,  0,    27,  68,   0,  0}, 
+        {GFXID_WOLF, 142, 0,    29,  76,   0,  0}, 
+        {GFXID_WOLF,  0,  58,    23,  58,   0,  0}, 
+        {GFXID_WOLF, 23,  58,    23,  58,   0,  0}, 
+        {GFXID_WOLF, 46,  58,    23,  58,   0,  0}, 
 
     };
     //#elif SIZE == "Extra"
@@ -233,6 +229,9 @@ public class GfxManager {
         SPRID_WOLF+4,
         SPRID_WOLF+5,
         SPRID_WOLF+6,
+        SPRID_WOLF+7,
+        SPRID_WOLF+8,
+        SPRID_WOLF+9,
     };
     public static final byte GRASS_TILE [] = {
         SPRID_GRASSTILE,

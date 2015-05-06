@@ -164,9 +164,9 @@ public class Main extends Canvas implements Runnable
         TouchScreenCheck();
         GfxManager.InitSpriteManager();
 
-        FntManager.LoadFont(FntManager.FONT_SMALL);
-        FntManager.LoadFont(FntManager.FONT_NORMAL);
-        FntManager.LoadFont(FntManager.FONT_BIG);
+        FntManager.LoadFont(FntManager.FONT_INACTIVE);
+        FntManager.LoadFont(FntManager.FONT_ACTIVE);
+        FntManager.LoadFont(FntManager.FONT_INGAME);
 
         Debug.DebugReadPostmortemData();
         RmsManager.RmsLoadSaveData(RmsManager.FILE_SYS, RmsManager.MODE_LOAD);

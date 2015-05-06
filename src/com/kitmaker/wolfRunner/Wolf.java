@@ -19,15 +19,14 @@ public class Wolf extends Vector2 {
     public static final int ST_WOLF_ACTIVE = ST_WOLF_ANIMATING + 1;
     public static final int ST_WOLF_DYING = ST_WOLF_ACTIVE + 1;
     public boolean isJumping;
-    public boolean isFirstAnimation;
     public int actualFrame = 0;
     public static int width = GfxManager.SPRITE_DATA[GfxManager.WOLF[0]][GfxManager.SPR_WIDTH];
     public static int height = GfxManager.SPRITE_DATA[GfxManager.WOLF[0]][GfxManager.SPR_HEIGHT];
     public int colInPack;
     public int rowInPack;
     public int iSpawnTimelapse;
-    public int actualPositionX;
-    public int actualPositionY;
+    public int spawnPointX;
+    public int spawnPointY;
 
     public Wolf() {
         super(-width, -height);
@@ -36,39 +35,64 @@ public class Wolf extends Vector2 {
     public void initWolf(int rowInPack, int colInPack, int spawnTimelapse) {
         this.rowInPack = rowInPack;
         this.colInPack = colInPack;
-        this.x = (int) (WolfPack.x - ((WolfPack.ms_iWolfPackPositions[0].length / 2) * width) + (width / 2) + (colInPack * width));
-        this.y = (int) rowInPack * (height) + WolfPack.y;
+        this.spawnPointX = (int) (WolfPack.x - ((WolfPack.positionOfWolvesInPack[0].length / 2) * width) + (width / 2) + (colInPack * width));
+        this.spawnPointY = (int) (rowInPack * (height) + WolfPack.y);
         this.iSpawnTimelapse = spawnTimelapse;
         state = ST_WOLF_WAITING;
         initFirstSpawnAnimation();
-        isFirstAnimation = true;
+        initRespawn();
     }
 
     public void Run() {
-        switch (state) {
-            case ST_WOLF_WAITING:
-                spawnDelayController();
-                break;
-            case ST_WOLF_ANIMATING:
-                if (isFirstAnimation) {
-                    animateFirstSpawn();
+        switch (Define.ms_iState) {
+            case Define.ST_GAME_ANIMATING:
+                //<editor-fold defaultstate="collapsed" desc="Animatioon stats">
+                switch (state) {
+                    case ST_WOLF_WAITING:
+                        spawnDelayController();
+                        break;
+                    case ST_WOLF_ANIMATING:
+                        animateFirstSpawn();
+                    case ST_WOLF_ACTIVE:
+                        changeFrame();
+                        break;
                 }
-                changeFrame();
+                //</editor-fold>
                 break;
-            case ST_WOLF_ACTIVE:
-                move();
-                if (isJumping) {
-                    jump();
-                } else {
-                    if (!WolfPack.isInmortal) {
+            case Define.ST_GAME_RUNNING:
+                //<editor-fold defaultstate="collapsed" desc="Game runing stats">
+                switch (state) {
+                    case ST_WOLF_WAITING:
+                        spawnDelayController();
+                        break;
+                    case ST_WOLF_ANIMATING:
+                        animateRespawn();
+                        changeFrame();
                         collideWithObstacle();
-                    }
-                    changeFrame();
+                        if (isJumping) {
+                            jump();
+                        }
+                        break;
+                    case ST_WOLF_ACTIVE:
+                        move();
+                        if (isJumping) {
+                            jump();
+                        } else {
+                            collideWithObstacle();
+                            changeFrame();
+                        }
+                        break;
+                    case ST_WOLF_DYING:
+                        die();
+                        break;
                 }
+                //</editor-fold>
                 break;
-            case ST_WOLF_DYING:
+            case Define.ST_GAME_OVER:
+                die();
                 break;
         }
+
     }
     //Change frame over time to animate wolf
     private float frameTimeRemaining;
@@ -84,6 +108,7 @@ public class Wolf extends Vector2 {
             }
         }
     }
+    //<editor-fold defaultstate="collapsed" desc="Spawn and animations">
     public long spawnCountdown;
 
     public void spawnDelayController() {
@@ -99,21 +124,21 @@ public class Wolf extends Vector2 {
     public Vector2 _temporalPosition = new Vector2();
 
     public void initFirstSpawnAnimation() {
-        if (colInPack < WolfPack.ms_iWolfPackPositions.length / 2) {
+        if (colInPack < WolfPack.positionOfWolvesInPack.length / 2) {
             _bez = new BezierCurve(
                     //primer punto
                     -width,
                     Define.BASE_SIZEY2,
                     //Segundo punto
-                    Define.BASE_SIZEX2,
+                    Define.BASE_SIZEX2 - Define.BASE_SIZEX4,
                     Define.BASE_SIZEY2,
                     //Tercer punto
-                    Define.BASE_SIZEX2,
-                    (int) (y),
-                    //Quarto punto
-                    (int) (x),
-                    (int) (y));
-        } else if (colInPack > WolfPack.ms_iWolfPackPositions[0].length / 2) {
+                    Define.BASE_SIZEX2 - Define.BASE_SIZEX4,
+                    (int) (spawnPointY),
+                    //Cuarto punto
+                    (int) (spawnPointX),
+                    (int) (spawnPointY));
+        } else if (colInPack > WolfPack.positionOfWolvesInPack[0].length / 2) {
             _bez = new BezierCurve(
                     //primer punto
                     Define.BASE_SIZEX + width,
@@ -123,24 +148,24 @@ public class Wolf extends Vector2 {
                     Define.BASE_SIZEY2,
                     //Tercer punto
                     Define.BASE_SIZEX2 + Define.BASE_SIZEX4,
-                    (int) (y),
-                    //Quarto punto
-                    (int) (x),
-                    (int) y);
+                    (int) (spawnPointY),
+                    //Cuarto punto
+                    (int) (spawnPointX),
+                    (int) spawnPointY);
         } else {
             _bez = new BezierCurve(
                     //primer punto
-                    Define.BASE_SIZEX2,
+                    Define.BASE_SIZEX2 + (width * colInPack),
                     Define.BASE_SIZEY + height,
                     //Segundo punto
-                    Define.BASE_SIZEX2,
+                    Define.BASE_SIZEX2 + (width * colInPack),
                     Define.BASE_SIZEY - height,
                     //Tercer punto
-                    (int) x,
-                    (int) (y + ((Define.BASE_SIZEY - y) / 2)),
-                    //Quarto punto
-                    (int) x,
-                    (int) y);
+                    (int) spawnPointX,
+                    (int) (spawnPointY + ((Define.BASE_SIZEY - spawnPointY) / 2)),
+                    //Cuarto punto
+                    (int) spawnPointX,
+                    (int) spawnPointY);
         }
     }
 
@@ -153,19 +178,63 @@ public class Wolf extends Vector2 {
             y = _temporalPosition.y;
         } else {
             animElapsedTime = 0;
-            isFirstAnimation = false;
             state = ST_WOLF_ACTIVE;
         }
     }
+    public int animationInitPointX;
+    public int animationInitPointY;
 
+    public void initRespawn() {
+        if (colInPack < WolfPack.positionOfWolvesInPack.length / 2) {
+            x = animationInitPointX = -width;
+            y = animationInitPointY = Define.BASE_SIZEY2;
+        } else if (colInPack > WolfPack.positionOfWolvesInPack[0].length / 2) {
+            x = animationInitPointX = Define.BASE_SIZEX + width;
+            y = animationInitPointY = Define.BASE_SIZEY2;
+        } else {
+            x = animationInitPointX = Define.BASE_SIZEX2;
+            y = animationInitPointY = Define.BASE_SIZEY + height;
+        }
+    }
+    public float animationPixelsPerSecX;
+    public float animationPixelsPerSecY;
+
+    public void animateRespawn() {
+        this.spawnPointX = (int) (WolfPack.x - ((WolfPack.positionOfWolvesInPack[0].length / 2) * width) + (width / 2) + (colInPack * width));
+        animationPixelsPerSecX = (spawnPointX - x);
+        animationPixelsPerSecY = (spawnPointY - y);
+        if (Math.abs(animationPixelsPerSecX) < 2 && Math.abs(animationPixelsPerSecY) < 2) {
+            state = ST_WOLF_ACTIVE;
+        } else {
+            Vector2 direction = new Vector2(animationPixelsPerSecX, animationPixelsPerSecY);
+            float distance = direction.length();
+            direction.normalize();
+            direction.multiply(Math.min(Define.BASE_SIZEX2 * (float) Main.deltaTime / Main.SECOND, distance));
+            x += direction.x;
+            y += direction.y;
+        }
+    }
+    //</editor-fold>
     //movement
+
     public void move() {
-        x = (int) (WolfPack.x - ((WolfPack.ms_iWolfPackPositions[0].length / 2) * width) + (width / 2) + (colInPack * width));
+        //x of wolfpack - the total amount of wolves /2 * a wolf width
+        //+ half width of a wolf + the position of the wolf in the pack * its width 
+        x = (int) (WolfPack.x - ((WolfPack.positionOfWolvesInPack[0].length / 2) * width) + (width / 2) + (colInPack * width));
         if (y < WolfPack.jumpPoint
                 && y + height > WolfPack.jumpPoint) {
-            isJumping = true;
-            actualFrame = 3;
+            tryJumping();
         }
+    }
+
+    public void tryJumping() {
+        isJumping = true;
+        actualFrame = 3;
+    }
+
+    public void stopJumping() {
+        isJumping = false;
+        actualFrame = 3;
     }
     public int jumpCountDown;
     public final int JUMP_DURATION = (int) (1 * Main.SECOND);
@@ -184,8 +253,7 @@ public class Wolf extends Vector2 {
             }
         } else {
             jumpCountDown = 0;
-            actualFrame = 3;
-            isJumping = false;
+            stopJumping();
         }
     }
 
@@ -202,8 +270,11 @@ public class Wolf extends Vector2 {
                                 Scenario.ms_iFirstTileY + (Scenario.TILE_HEIGHT * i),
                                 Scenario.TILE_WIDTH,
                                 Scenario.TILE_HEIGHT)) {
-                            WolfPack.killWolf(this);
-                            break;
+                            if (WolfPack.isInmortal || state == ST_WOLF_ANIMATING) {
+                                tryJumping();
+                            } else {
+                                WolfPack.killWolf(this);
+                            }
                         }
                 }
             }
@@ -220,6 +291,28 @@ public class Wolf extends Vector2 {
         }
         return false;
     }
+    public int deathCountdown;
+    public final float DEATH_DURATION = 1 * Main.SECOND;
+    public final float DEATH_FRAME1_DURATION = DEATH_DURATION / 4;
+    public final float DEATH_FRAME2_DURATION = DEATH_DURATION / 2;
+
+    public void die() {
+        deathCountdown += Main.deltaTime;
+        if (deathCountdown < DEATH_DURATION) {
+            if (deathCountdown < DEATH_FRAME1_DURATION) {
+                actualFrame = 7;
+            } else if (deathCountdown < DEATH_FRAME2_DURATION) {
+                y += WolfPack.packSpeedY / 2;
+                actualFrame = 8;
+            } else {
+                actualFrame = 9;
+                y += WolfPack.packSpeedY;
+            }
+        } else {
+            deathCountdown = 0;
+            state = 0;
+        }
+    }
 
     public void Draw(Graphics g) {
         switch (state) {
@@ -227,9 +320,8 @@ public class Wolf extends Vector2 {
                 break;
             case ST_WOLF_ANIMATING:
             case ST_WOLF_ACTIVE:
-                drawWolf(g);
-                break;
             case ST_WOLF_DYING:
+                drawWolf(g);
                 break;
         }
     }

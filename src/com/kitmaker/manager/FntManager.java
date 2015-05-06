@@ -51,13 +51,13 @@ public class FntManager {
     
     // FONTS ////////////////////////////////////////////////////////////////////
     //#if d500 || tripletslp || tripletshp
-//#     public static final int FONT_SMALL = 0;
-//#     public static final int FONT_NORMAL = 1;
-//#     public static final int FONT_BIG = 1;
+//#     public static final int FONT_INACTIVE = 0;
+//#     public static final int FONT_ACTIVE = 1;
+//#     public static final int FONT_INGAME = 1;
     //#else
-    public static final int FONT_SMALL = 0;
-    public static final int FONT_NORMAL = 1;
-    public static final int FONT_BIG = 2;
+    public static final int FONT_INACTIVE = 0;
+    public static final int FONT_ACTIVE = 1;
+    public static final int FONT_INGAME = 2;
     //#endif
     
     // graphic fonts

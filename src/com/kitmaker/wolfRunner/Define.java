@@ -359,4 +359,170 @@ public class Define {
 //#     static int IBBKEY_BN = 22;
 //#     static int IBBKEY_M = 23;
     //#endif 
+      //<editor-fold defaultstate="collapsed" desc="Atan">
+    private static final double PIover2 = PI / 2;
+    private static final double PIover4 = PI / 4;
+    private static final double PIover6 = PI / 6;
+    private static final double PIover12 = PI / 12;
+    private static final double ATAN_CONSTANT = 1.732050807569;
+
+    public static double atan(double a) {
+        // Special cases.
+        if (Double.isNaN(a)) {
+            return Double.NaN;
+        }
+        if (a == 0.0) {
+            return a;
+        }
+        // Compute the arc tangent.
+        boolean negative = false;
+        boolean greaterThanOne = false;
+        int i = 0;
+
+        if (a < 0.0) {
+            a = -a;
+            negative = true;
+        }
+
+        if (a > 1.0) {
+            a = 1.0 / a;
+            greaterThanOne = true;
+        }
+
+        double t;
+
+        for (; a > PIover12; a *= t) {
+            i++;
+            t = a + ATAN_CONSTANT;
+            t = 1.0 / t;
+            a *= ATAN_CONSTANT;
+            a--;
+        }
+
+        double aSquared = a * a;
+
+        double arcTangent = aSquared + 1.4087812;
+        arcTangent = 0.55913709 / arcTangent;
+        arcTangent += 0.60310578999999997;
+        arcTangent -= 0.051604539999999997 * aSquared;
+        arcTangent *= a;
+
+        for (; i > 0; i--) {
+            arcTangent += PIover6;
+        }
+
+        if (greaterThanOne) {
+            arcTangent = PIover2 - arcTangent;
+        }
+
+        if (negative) {
+            arcTangent = -arcTangent;
+        }
+
+        return arcTangent;
+    }
+
+    public static double atan2(double y, double x) {
+        // Special cases.
+        if (Double.isNaN(y) || Double.isNaN(x)) {
+            return Double.NaN;
+        } else if (Double.isInfinite(y)) {
+            // Positive infinity
+            if (y > 0.0) {
+                if (Double.isInfinite(x)) {
+                    if (x > 0.0) {
+                        return PIover4;
+                    } else {
+                        return 3.0 * PIover4;
+                    }
+
+                } else if (x != 0.0) {
+                    return PIover2;
+                }
+            } else {
+                // Negative infinity
+                if (Double.isInfinite(x)) {
+                    if (x > 0.0) {
+                        return -PIover4;
+                    } else {
+                        return -3.0 * PIover4;
+                    }
+
+                } else if (x != 0.0) {
+                    return -PIover2;
+                }
+            }
+        } else if (y == 0.0) {
+            if (x > 0.0) {
+                return y;
+            } else if (x < 0.0) {
+                return PI;
+            }
+
+        } else if (Double.isInfinite(x)) {
+            // Positive infinity
+            if (x > 0.0) {
+                if (y > 0.0) {
+                    return 0.0;
+                } else if (y < 0.0) {
+                    return -0.0;
+                }
+
+            } else {
+                // Negative infinity
+                if (y > 0.0) {
+                    return PI;
+                } else if (y < 0.0) {
+                    return -PI;
+                }
+            }
+        } else if (x == 0.0) {
+            if (y > 0.0) {
+                return PIover2;
+            } else if (y < 0.0) {
+                return -PIover2;
+            }
+        }
+
+        // Implementation a simple version ported from a PASCAL implementation:
+        //   http://everything2.com/index.pl?node_id=1008481
+
+        double arcTangent;
+
+        // Use arctan() avoiding division by zero.
+
+        double dX = x;
+        double dY = y;
+        if (dX < 0) {
+            dX = -dX;
+        }
+        if (dY < 0) {
+            dY = -dY;
+        }
+
+        if (dX > dY) {
+            //if (Math.abs(x) > Math.abs(y)) {
+            arcTangent = atan(y / x);
+        } else {
+            arcTangent = atan(x / y); // -PI/4 <= a <= PI/4
+
+            if (arcTangent < 0) {
+                arcTangent = -PIover2 - arcTangent; // a is negative, so we're adding
+            } else {
+                arcTangent = PIover2 - arcTangent;
+            }
+        }
+
+        // Adjust result to be from [-PI, PI]
+        if (x < 0) {
+            if (y < 0) {
+                arcTangent = arcTangent - Math.PI;
+            } else {
+                arcTangent = arcTangent + Math.PI;
+            }
+        }
+
+        return arcTangent;
+    }
+    //</editor-fold>
 }

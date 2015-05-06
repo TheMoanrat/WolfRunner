@@ -1,5 +1,6 @@
 package com.kitmaker.wolfRunner;
 
+import com.kitmaker.manager.FntManager;
 import com.kitmaker.manager.GfxManager;
 import com.kitmaker.manager.TxtManager;
 import com.kitmaker.manager.SndManager;
@@ -79,10 +80,8 @@ public class ModeGame extends Define {
     public static int ms_iArrowMapPositionRunX = -1;
     public static int ms_iArrowMapPositionRunY = -1;
     static String zArray[];
-    public static int ms_iBackgroundY1;
-    public static int ms_iBackgroundX1;
-    public static int ms_iBackgroundY2;
-    public static int ms_iBackgroundX2;
+    public static int level;
+    public static int points;
 
     static void InitState(int _iNewState) {
         //#if StaticHud
@@ -90,25 +89,60 @@ public class ModeGame extends Define {
         //#endif
 
         switch (_iNewState) {
-
             // iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
             // This state only is executed when we come tu the menu
             case Define.ST_GAME_INIT:
                 loadGameImages();
+                level = 1;
+                points = 0;
                 WolfPack.init();
                 Scenario.init();
                 break;
             case Define.ST_GAME_ANIMATING:
             case Define.ST_GAME_RUNNING:
-//                initGame();
                 break;
         }
     }
+    public static float levelUpCountdown;
+    public static final float TIME_TO_LEVEL_UP = 30 * Main.SECOND;
 
+    private static void changeLevel() {
+        points++;
+        levelUpCountdown += Main.deltaTime;
+        if (levelUpCountdown > TIME_TO_LEVEL_UP) {
+            levelUpCountdown = 0;
+            level++;
+        }
+    }
+    private static final int OPT_RESTART_GAME = 0;
+    private static final int OPT_BACK_TO_MENU = OPT_RESTART_GAME + 1;
+    private static int gameOverMenuOption = OPT_RESTART_GAME;
 
+    private static void restartGame() {
+        if (Main.GameKeyPressed(Main.KEYINT_FIRE, true)
+                || Main.GameKeyPressed(Main.KEYINT_SKLEFT, true)) {
+            if (gameOverMenuOption == OPT_RESTART_GAME) {
+                Main.RequestStateChange(Define.ST_GAME_INIT);
+            } else if (gameOverMenuOption == OPT_BACK_TO_MENU) {
+                Main.RequestStateChange(Define.ST_MENU_MAIN);
+            }
+        }
+        if (Main.GameKeyPressed(Main.KEYINT_DOWN, true)
+                || Main.GameKeyPressed(Main.KEYINT_UP, true)) {
+            if (gameOverMenuOption == OPT_RESTART_GAME) {
+                gameOverMenuOption = OPT_BACK_TO_MENU;
+                return;
+            }
+            if (gameOverMenuOption == OPT_BACK_TO_MENU) {
+                gameOverMenuOption = OPT_RESTART_GAME;
+                return;
+            }
+        }
+    }
     /*
      * load the images used during the gameplay
      */
+
     private static void loadGameImages() {
         GfxManager.ResetGraphics();
 
@@ -120,6 +154,8 @@ public class ModeGame extends Define {
                 GfxManager.AddGraphic(GfxManager.GFXID_SIDE_TREETILE);
                 GfxManager.AddGraphic(GfxManager.GFXID_ROCKTILE);
                 GfxManager.AddGraphic(GfxManager.GFXID_WOLF);
+                GfxManager.AddGraphic(GfxManager.GFXID_SK_NEXT);
+                GfxManager.AddGraphic(GfxManager.GFXID_MENU_BUTTONS);
 
                 GfxManager.LoadGraphics(true);
                 break;
@@ -128,36 +164,6 @@ public class ModeGame extends Define {
             case Define.ST_GAME_RUNNING:
                 break;
         }
-    }
-
-    static void Draw(Graphics _g) {
-        switch (Define.ms_iState) {
-            case Define.ST_GAME_INIT:
-                break;
-            case Define.ST_GAME_ANIMATING:
-
-            case Define.ST_GAME_RUNNING:
-                Scenario.Draw(_g);
-                WolfPack.Draw(_g);
-                break;
-        }
-
-
-        //#if Debug
-//#         if (mst_bShowDebug) {
-//#             _g.setColor(0xff000000);
-//#         }
-        //#endif
-
-        // trazas tracitas
-        /*
-         * _g.setColor(0xffffffff); _g.drawString(Main.ms_iKeyInt_Map + "",
-         * 10+1, 80+1); _g.drawString(Main.mst_iNumKeyPressed + "", 10+1, 95+1);
-         * _g.drawString(Main.mst_iNumKeyReleased + "", 10+1, 110+1);
-         * _g.setColor(0xffff0000); _g.drawString(Main.ms_iKeyInt_Map + "", 10,
-         * 80); _g.drawString(Main.mst_iNumKeyPressed + "", 10, 95);
-         * _g.drawString(Main.mst_iNumKeyReleased + "", 10, 110);
-         */
     }
 
     static void Run() {
@@ -170,127 +176,122 @@ public class ModeGame extends Define {
             case Define.ST_GAME_RUNNING:
                 Scenario.Run();
                 WolfPack.Run();
+                changeLevel();
+
                 break;
+            case Define.ST_GAME_OVER:
+                Scenario.Run();
+                WolfPack.Run();
+                restartGame();
         }
     }
 
     static void HandleInput() {
     }
 
-    private static void initGame() {
-
-        //Touchpad
-        if (Main.TOUCHSCREEN_SUPPORTED) {
-//            ms_iDeadZoneWidth = GfxManager.ms_vImage[GfxManager.GFXID_PAD2].getWidth();
-//            ms_iDeadZoneHeight = GfxManager.ms_vImage[GfxManager.GFXID_PAD2].getHeight();
-//            ms_iTouchWidth = GfxManager.ms_vImage[GfxManager.GFXID_PAD1].getWidth();
-//            ms_iTouchHeight = GfxManager.ms_vImage[GfxManager.GFXID_PAD1].getHeight();
-        }
-
-        //Main.RequestStateChange(Main.ST_GAME_MAP);
-//        SndManager.StopMusic();
-//        SndManager.PlayMusic(SndManager.MUSIC_MAP, true, 0);
-
-    }
-    //TODO make this go at acording to the wolf speed
-
-    public static void runPad() {
-
-        if ((Main.ms_iScreenTouched_Map[0] == Main.ACTION_DOWN)
-                && (Main.ms_iScreenTouched_Frames < 5)
-                && Main.ms_iScreenOrigin_Y[0] > MAP_MARGIN_U) {
-            ms_iTouchX0 = Main.ms_iScreenOrigin_X[0];
-            ms_iTouchY0 = Main.ms_iScreenOrigin_Y[0];
-            ms_iTouchX1 = Main.ms_iScreenTouched_X[0];
-            ms_iTouchY1 = Main.ms_iScreenTouched_Y[0];
-
-        } else if ((Main.ms_iScreenTouched_Map[0] == Main.ACTION_MOVE)
-                || (Main.ms_iScreenTouched_Map[1] == Main.ACTION_MOVE)
-                || (Main.ms_iScreenTouched_Map[0] == Main.ACTION_DOWN)
-                || (Main.ms_iScreenTouched_Map[1] == Main.ACTION_DOWN)) {
-            ms_iTouchX1 = Main.ms_iScreenTouched_X[0];
-            ms_iTouchY1 = Main.ms_iScreenTouched_Y[0];
-
-            if (((ms_iTouchX0 != 0) && (ms_iTouchX1 != 0)
-                    && (ms_iTouchY0 != 0) && (ms_iTouchY1 != 0))) {
-
-                ms_iDeadZoneX = ms_iTouchX0;
-                ms_iDeadZoneY = ms_iTouchY0;
-
-                // UP zone
-                if ((ms_iTouchY1 > 0) && (ms_iTouchY1 < ms_iDeadZoneY - (ms_iDeadZoneWidth >> 2))) {
-                    C_UP = true;
-                } // DOWN zone
-                else if ((ms_iTouchY1 > ms_iDeadZoneY + ms_iTouchWidth - (ms_iDeadZoneWidth >> 2)) && (ms_iTouchY1 < Define.SIZEY)) {
-                    C_DOWN = true;
-                }
-                // LEFT zone
-                if ((ms_iTouchX1 > 0) && (ms_iTouchX1 < ms_iDeadZoneX - (ms_iTouchWidth >> 2))) {
-                    C_LEFT = true;
-                } // RIGHT zone
-                else if ((ms_iTouchX1 > ms_iDeadZoneX + ms_iTouchWidth - (ms_iDeadZoneWidth >> 2)) && (ms_iTouchX1 < Define.SIZEX)) {
-                    C_RIGHT = true;
-                }
-            }
-        } else if ((Main.ms_iScreenTouched_Map[0] == Main.ACTION_UP)
-                || (Main.ms_iScreenTouched_Map[1] == Main.ACTION_UP)) {
-            //#if StaticHud
-//#             if (ms_iTouchX0 != 0) {
-//#                 ms_isPaintHud = true;
-//#             }
-            //#endif
-            ms_iTouchX1 = 0;
-            ms_iTouchY1 = 0;
-            ms_iTouchX0 = 0;
-            ms_iTouchY0 = 0;
+    static void Draw(Graphics g) {
+        switch (Define.ms_iState) {
+            case Define.ST_GAME_INIT:
+                break;
+            case Define.ST_GAME_ANIMATING:
+            case Define.ST_GAME_RUNNING:
+                Scenario.Draw(g);
+                WolfPack.Draw(g);
+                Hud.Draw(g);
+                break;
+            case Define.ST_GAME_OVER:
+                Scenario.Draw(g);
+                WolfPack.Draw(g);
+                Hud.Draw(g);
+                drawGameOvermenu(g);
+                break;
         }
     }
 
-    public static void drawPad(Graphics _g) {
-        _g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
+    static void drawGameOvermenu(Graphics g) {
+        g.setClip(0,
+                Define.BASE_SIZEY - GfxManager.SPRITE_DATA[GfxManager.SK_NEXT[0]][GfxManager.SPR_HEIGHT],
+                GfxManager.SPRITE_DATA[GfxManager.SK_NEXT[0]][GfxManager.SPR_WIDTH],
+                GfxManager.SPRITE_DATA[GfxManager.SK_NEXT[0]][GfxManager.SPR_HEIGHT]);
+        g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_SK_NEXT],
+                0,
+                Define.BASE_SIZEY,
+                Graphics.BOTTOM);
+        g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
+        if (gameOverMenuOption == OPT_RESTART_GAME) {
+            //first box
+            g.setClip(Define.BASE_SIZEX2 - (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_WIDTH] / 2),
+                    Define.BASE_SIZEY4,
+                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_WIDTH],
+                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_HEIGHT]);
+            g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_MENU_BUTTONS],
+                    Define.BASE_SIZEX2,
+                    Define.BASE_SIZEY4 - GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_POS_Y],
+                    Graphics.HCENTER);
+            //box text
+            FntManager.DrawFont(g,
+                    FntManager.FONT_ACTIVE,
+                    TxtManager.ms_vText[TxtManager.TXT_CONTINUE_PLAY],
+                    Define.BASE_SIZEX2,
+                    Define.BASE_SIZEY4 + (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_HEIGHT] / 2),
+                    Graphics.HCENTER | Graphics.VCENTER,
+                    TxtManager.ms_vText[TxtManager.TXT_CONTINUE_PLAY].length());
+            g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
+            //second box
+            g.setClip(Define.BASE_SIZEX2 - (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_WIDTH] / 2),
+                    Define.BASE_SIZEY2,
+                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_WIDTH],
+                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_HEIGHT]);
+            g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_MENU_BUTTONS],
+                    Define.BASE_SIZEX2,
+                    Define.BASE_SIZEY2,
+                    Graphics.HCENTER);
+            //2nd box text
+            FntManager.DrawFont(g,
+                    FntManager.FONT_INACTIVE,
+                    TxtManager.ms_vText[TxtManager.TXT_EXIT_RUN],
+                    Define.BASE_SIZEX2,
+                    Define.BASE_SIZEY2 + (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_HEIGHT] / 2),
+                    Graphics.HCENTER | Graphics.VCENTER,
+                    TxtManager.ms_vText[TxtManager.TXT_EXIT_RUN].length());
+            g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
 
-        ms_iDeadZoneX = ms_iTouchX0;
-        ms_iDeadZoneY = ms_iTouchY0;
-
-//        _g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_PAD2], 
-//            ms_iDeadZoneX-(GfxManager.ms_vImage[GfxManager.GFXID_PAD2].getWidth()>>1), 
-//            ms_iDeadZoneY-(GfxManager.ms_vImage[GfxManager.GFXID_PAD2].getHeight()>>1), 0);
-
-        int iPadX = ms_iDeadZoneX - (ms_iDeadZoneWidth >> 2);
-        int iPadY = ms_iDeadZoneY - (ms_iDeadZoneWidth >> 2);
-
-        if (Main.ms_iScreenTouched_Map[0] != Main.ACTION_UP) {
-            // UP zone
-            if (C_UP) {
-                iPadY = ms_iDeadZoneY - (ms_iDeadZoneWidth >> 1) - (ms_iDeadZoneWidth >> 3);
-            } // DOWN zone
-            else if (C_DOWN) {
-                iPadY = ms_iDeadZoneY + (ms_iDeadZoneWidth >> 2) - (ms_iDeadZoneWidth >> 3);
-            }
-            // LEFT zone
-            if (C_LEFT) {
-                iPadX = ms_iDeadZoneX - (ms_iDeadZoneWidth >> 1) - (ms_iDeadZoneWidth >> 3);
-            } // RIGHT zone
-            else if (C_RIGHT) {
-                iPadX = ms_iDeadZoneX + (ms_iDeadZoneWidth >> 2) - (ms_iDeadZoneWidth >> 3);
-            }
+        } else if (gameOverMenuOption == OPT_BACK_TO_MENU) {
+            // First box 
+            g.setClip(Define.BASE_SIZEX2 - (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_WIDTH] / 2),
+                    Define.BASE_SIZEY4,
+                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_WIDTH],
+                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_HEIGHT]);
+            g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_MENU_BUTTONS],
+                    Define.BASE_SIZEX2,
+                    Define.BASE_SIZEY4,
+                    Graphics.HCENTER);
+            // 1st box text 
+            FntManager.DrawFont(g,
+                    FntManager.FONT_INACTIVE,
+                    TxtManager.ms_vText[TxtManager.TXT_CONTINUE_PLAY],
+                    Define.BASE_SIZEX2,
+                    Define.BASE_SIZEY4 + (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[0]][GfxManager.SPR_HEIGHT] / 2),
+                    Graphics.HCENTER | Graphics.VCENTER,
+                    TxtManager.ms_vText[TxtManager.TXT_CONTINUE_PLAY].length());
+            g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
+            //Second box
+            g.setClip(Define.BASE_SIZEX2 - (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_WIDTH] / 2),
+                    Define.BASE_SIZEY2,
+                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_WIDTH],
+                    GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_HEIGHT]);
+            g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_MENU_BUTTONS],
+                    Define.BASE_SIZEX2,
+                    Define.BASE_SIZEY2 - GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_POS_Y],
+                    Graphics.HCENTER);
+            FntManager.DrawFont(g,
+                    FntManager.FONT_ACTIVE,
+                    TxtManager.ms_vText[TxtManager.TXT_EXIT_RUN],
+                    Define.BASE_SIZEX2,
+                    Define.BASE_SIZEY2 + (GfxManager.SPRITE_DATA[GfxManager.MENU_BUTTON[1]][GfxManager.SPR_HEIGHT] / 2),
+                    Graphics.HCENTER | Graphics.VCENTER,
+                    TxtManager.ms_vText[TxtManager.TXT_EXIT_RUN].length());
+            g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
         }
-//        _g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_PAD1], iPadX, iPadY, 0);
-    }
-
-    public static void drawMenuBackground(Graphics _g) {
-        _g.saveClip();
-        _g.clipRect(0, 0, Define.SIZEX, Define.SIZEY);
-
-        int capas = 16;
-        int size = Define.SIZEY / capas;
-        _g.setColor(0xff635214);
-        _g.fillRect(0, 0, Define.SIZEX, Define.SIZEY);
-        for (int i = 0; i < capas + 1; i++) {
-            _g.setBlendedColor(0xff98c465, 0xff635214, i * capas);
-            _g.fillRect(0, (size * i), Define.SIZEX, size);
-        }
-
-        _g.restoreClip();
     }
 }

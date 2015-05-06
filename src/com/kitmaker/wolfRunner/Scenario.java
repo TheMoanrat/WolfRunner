@@ -50,7 +50,7 @@ public class Scenario {
     }
 
     public static void moveTiles() {
-        ms_iFirstTileY += WolfPack.ms_iPackSpeedY;
+        ms_iFirstTileY += WolfPack.packSpeedY;
         if (ms_iFirstTileY > 0) {
             int[] aux1 = new int[ms_iTiles[0].length];
             int[] aux2 = generateTiles();

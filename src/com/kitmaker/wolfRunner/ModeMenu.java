@@ -255,7 +255,7 @@ public class ModeMenu extends Define {
                     zArray[i] = TxtManager.ms_vText[ms_iDinamicHelpId[ms_iHelpPage][i]];
                 }
 
-                FntManager.ms_iDrawRectFontLines = FntManager.SplitString(zArray, Define.SIZEX - Define.SIZEX16, FntManager.FONT_SMALL);
+                FntManager.ms_iDrawRectFontLines = FntManager.SplitString(zArray, Define.SIZEX - Define.SIZEX16, FntManager.FONT_INACTIVE);
                 fraseRepartida = true;
                 break;
 
@@ -549,7 +549,7 @@ public class ModeMenu extends Define {
                         zArray[i] = TxtManager.ms_vText[ms_iDinamicHelpId[ms_iHelpPage][i]];
                     }
                     
-                    FntManager.ms_iDrawRectFontLines = FntManager.SplitString(zArray, Define.SIZEX - Define.SIZEX16, FntManager.FONT_BIG);
+                    FntManager.ms_iDrawRectFontLines = FntManager.SplitString(zArray, Define.SIZEX - Define.SIZEX16, FntManager.FONT_INACTIVE);
                     fraseRepartida = true;
                 }
                 break;
@@ -742,7 +742,7 @@ public class ModeMenu extends Define {
                     TxtManager.ms_vTextLanguageMenu, ms_iDinamicMenuTxt, null, 
                     TxtManager.ms_vTextLanguageWord, (byte) (bLandscapeMenu?TxtManager.ms_iLanguage:-1),
                     Define.SIZEX2, Define.SIZEY2, 0, iNumItems, Graphics.HCENTER | Graphics.VCENTER, 
-                    FntManager.FONT_BIG, FntManager.FONT_NORMAL, -1, -1);
+                    FntManager.FONT_INACTIVE, FntManager.FONT_ACTIVE, -1, -1);
 
                 if (bLandscapeMenu)
                     Menu.ms_iSubOption[0] = (byte)TxtManager.ms_iLanguage;
@@ -795,7 +795,7 @@ public class ModeMenu extends Define {
                     TxtManager.ms_vText, ms_iDinamicMenuTxt, iDinamicMenuTitles, 
                     TxtManager.ms_vText, MENU_TITLE[Define.ms_iState],
                     Define.SIZEX2, Define.SIZEY2, 0, iNumItems, Graphics.HCENTER | Graphics.VCENTER,
-                    FntManager.FONT_BIG, FntManager.FONT_NORMAL, -1,-1);
+                    FntManager.FONT_INACTIVE, FntManager.FONT_ACTIVE, -1,-1);
 
                 Menu.ms_bAllowFireChange = true;
 
@@ -858,7 +858,7 @@ public class ModeMenu extends Define {
                     TxtManager.ms_vText, ms_iDinamicMenuTxt, null, 
                     TxtManager.ms_vText, MENU_TITLE[Define.ms_iState],
                     Define.SIZEX2, Define.SIZEY2, 0, iNumItems, Graphics.HCENTER | Graphics.VCENTER, 
-                    FntManager.FONT_BIG, FntManager.FONT_NORMAL, -1,-1);
+                    FntManager.FONT_INACTIVE, FntManager.FONT_ACTIVE, -1,-1);
                 
                 Menu.ms_bAllowFireChange = true;
                 break;
@@ -873,7 +873,7 @@ public class ModeMenu extends Define {
                         TxtManager.ms_vText, ms_iDinamicMenuTxt, null, 
                         TxtManager.ms_vText, MENU_TITLE[Define.ms_iState],
                         Define.SIZEX2, Define.SIZEY2, 0, iNumItems, Graphics.HCENTER | Graphics.VCENTER,
-                        FntManager.FONT_BIG, FntManager.FONT_NORMAL, -1, Define.SIZEY4);
+                        FntManager.FONT_INACTIVE, FntManager.FONT_ACTIVE, -1, Define.SIZEY4);
                 
                 Menu.ms_bAllowFireChange = true;
                 break;
@@ -887,7 +887,7 @@ public class ModeMenu extends Define {
                         TxtManager.ms_vText, ms_iDinamicMenuTxt, null, 
                         TxtManager.ms_vText, MENU_TITLE[Define.ms_iState],
                         Define.SIZEX2, Define.SIZEY2, 0, iNumItems, Graphics.HCENTER | Graphics.VCENTER,
-                        FntManager.FONT_BIG, FntManager.FONT_NORMAL, -1, -1);
+                        FntManager.FONT_INACTIVE, FntManager.FONT_ACTIVE, -1, -1);
                 
                 Menu.ms_bAllowFireChange = true;
                 break;

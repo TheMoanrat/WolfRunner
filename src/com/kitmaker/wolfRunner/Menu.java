@@ -321,8 +321,8 @@ public class Menu {
 
         // title
         if (ms_iTitleTxtID != -1) {
-            int iAddH = FntManager.FNT_HEIGHT[FntManager.FONT_BIG] * 2;
-            int iAddY = ms_iPosY - ms_iOptionHeight - ((FntManager.FNT_HEIGHT[FntManager.FONT_BIG] + iAddH)>>1);
+            int iAddH = FntManager.FNT_HEIGHT[FntManager.FONT_INACTIVE] * 2;
+            int iAddY = ms_iPosY - ms_iOptionHeight - ((FntManager.FNT_HEIGHT[FntManager.FONT_INACTIVE] + iAddH)>>1);
 
             _g.setColor(ModeMenu.COLOR_BROWN_DARK);
             _g.fillRect(0, iAddY, Define.SIZEX, iAddH);
@@ -331,7 +331,7 @@ public class Menu {
             _g.fillRect(0, iAddY, Define.SIZEX, Define.SIZEY16>>3);
             _g.fillRect(0, iAddY + iAddH - (Define.SIZEY16>>3), Define.SIZEX, Define.SIZEY16>>3);
                 
-            FntManager.DrawFont(_g, FntManager.FONT_BIG, ms_vTitle[ms_iTitleTxtID], 
+            FntManager.DrawFont(_g, FntManager.FONT_INACTIVE, ms_vTitle[ms_iTitleTxtID], 
                 Define.SIZEX2, iAddY + (iAddH>>1), Graphics.VCENTER | Graphics.HCENTER, -1);
         }
         
@@ -411,12 +411,12 @@ public class Menu {
         if (ms_iTitleTxtID != -1) {
             if (!ms_bSplitTitle) {
                 FntManager.SplitString(new String [] {ms_vTitle[ms_iTitleTxtID]}, 
-                    Define.SIZEX - Define.SIZEX8, FntManager.FONT_BIG);
+                    Define.SIZEX - Define.SIZEX8, FntManager.FONT_INACTIVE);
                 ms_bSplitTitle = true;
             }
 
-            int iAddH = FntManager.GetHeight(FntManager.FONT_SMALL)*(FntManager.ms_iDrawRectFontLines+1);
-            int iAddY = ms_iPosY - ms_iOptionHeight - ((FntManager.FNT_HEIGHT[FntManager.FONT_BIG] + iAddH)>>1);
+            int iAddH = FntManager.GetHeight(FntManager.FONT_INACTIVE)*(FntManager.ms_iDrawRectFontLines+1);
+            int iAddY = ms_iPosY - ms_iOptionHeight - ((FntManager.FNT_HEIGHT[FntManager.FONT_INACTIVE] + iAddH)>>1);
 
             _g.setColor(ModeMenu.COLOR_BROWN_DARK);
             _g.fillRect(0, iAddY, Define.SIZEX, iAddH);
@@ -431,14 +431,14 @@ public class Menu {
                 ms_sReplaceText.append(ms_vTitle[ms_iTitleTxtID].charAt(sb));
             }
             
-            FntManager.DrawFontInRectangle(_g, FntManager.FONT_SMALL, new String[]{ms_sReplaceText.toString()},
+            FntManager.DrawFontInRectangle(_g, FntManager.FONT_INACTIVE, new String[]{ms_sReplaceText.toString()},
                 Define.SIZEX2, 
                 iAddY + (iAddH>>1), 
                 Define.SIZEX - Define.SIZEX64,
                 //#if SIZE == "Small"
-//#                 (FntManager.GetHeight(FntManager.FONT_SMALL)*3)/4, 
+//#                 (FntManager.GetHeight(FntManager.FONT_INACTIVE)*3)/4, 
                 //#else
-                FntManager.GetHeight(FntManager.FONT_SMALL), 
+                FntManager.GetHeight(FntManager.FONT_INACTIVE), 
                 //#endif
                 FntManager.TOP | FntManager.HCENTER, Graphics.VCENTER, -1, true);
         }
@@ -461,8 +461,8 @@ public class Menu {
                     Graphics.VCENTER | Graphics.HCENTER);
             
             // draw text
-            int color = FntManager.getSystemColor(FntManager.FONT_BIG);
-            FntManager.setSystemColor(FntManager.FONT_BIG, 0xfffff600);
+            int color = FntManager.getSystemColor(FntManager.FONT_INACTIVE);
+            FntManager.setSystemColor(FntManager.FONT_INACTIVE, 0xfffff600);
             
             if (ms_iHeaderTextID != null && ms_iHeaderTextID[i] != -1) {
                 FntManager.DrawFont(_g, (i == Menu.ms_iMarkedOption)?ms_iFontHighlightID:ms_iFontID,
@@ -474,7 +474,7 @@ public class Menu {
                         iPosX, iPosY, ms_iTextAnchor, -1);
             }
             
-            FntManager.setSystemColor(FntManager.FONT_BIG, color);
+            FntManager.setSystemColor(FntManager.FONT_INACTIVE, color);
 
             if (i == Menu.ms_iMarkedOption)
                 iCursorY = iPosY;
