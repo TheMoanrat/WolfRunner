@@ -11,7 +11,6 @@ import javak.microedition.lcdui.Graphics;
  *
  * @author Tomeu
  */
-//TODO implement the wolfsquad and the wolves
 public class WolfPack {
 
     public static float x;
@@ -68,7 +67,7 @@ public class WolfPack {
     public static Wolf[] ms_wolves = new Wolf[positionOfWolvesInPack.length * positionOfWolvesInPack[0].length];
 
     public static void init() {
-        wolfLives = 3;
+        wolfLives = 100;
         x = Define.BASE_SIZEX2;
         y = Define.BASE_SIZEY2;
         for (int i = 0; i < ms_wolves.length; i++) {

@@ -123,10 +123,11 @@ public class ModeGame extends Define {
             case Define.ST_GAME_INIT:
                 //GfxManager.AddGraphic(GfxManager.GFXID_TILESET);
                 GfxManager.AddGraphic(GfxManager.GFXID_GRASSTILE);
-                GfxManager.AddGraphic(GfxManager.GFXID_SIDE_TREETILE);
                 GfxManager.AddGraphic(GfxManager.GFXID_ROCKTILE);
+                GfxManager.AddGraphic(GfxManager.GFXID_FIRST_RIVER_TILE);
+                GfxManager.AddGraphic(GfxManager.GFXID_THIRD_RIVER_TILE);
                 GfxManager.AddGraphic(GfxManager.GFXID_WOLF);
-                GfxManager.AddGraphic(GfxManager.GFXID_SK_NEXT);
+                GfxManager.AddGraphic(GfxManager.GFXID_SK_MENU);
                 GfxManager.AddGraphic(GfxManager.GFXID_MENU_BUTTONS);
                 GfxManager.AddGraphic(GfxManager.GFXID_LIFES_ICON);
 
@@ -213,18 +214,9 @@ public class ModeGame extends Define {
     }
 
     static void drawGameOvermenu(Graphics g) {
-        g.setClip(0,
-                Define.BASE_SIZEY - GfxManager.SPRITE_DATA[GfxManager.SK_NEXT[0]][GfxManager.SPR_HEIGHT],
-                GfxManager.SPRITE_DATA[GfxManager.SK_NEXT[0]][GfxManager.SPR_WIDTH],
-                GfxManager.SPRITE_DATA[GfxManager.SK_NEXT[0]][GfxManager.SPR_HEIGHT]);
-        g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_SK_NEXT],
-                0,
-                Define.BASE_SIZEY,
-                Graphics.BOTTOM);
-        g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
-
-        drawGameOvermenuOption(g, gameOverMenuOption == OPT_RESTART_GAME,Define.BASE_SIZEY4,TxtManager.TXT_EXIT_RUN);
-        drawGameOvermenuOption(g, gameOverMenuOption == OPT_BACK_TO_MENU,Define.BASE_SIZEY2, TxtManager.TXT_PLAY_AGAIN);
+        Menu.DrawNavigationIcons(g, Define.SK_OK, Define.SK_BACK);
+        drawGameOvermenuOption(g, gameOverMenuOption == OPT_RESTART_GAME, Define.BASE_SIZEY4, TxtManager.TXT_PLAY_AGAIN);
+        drawGameOvermenuOption(g, gameOverMenuOption == OPT_BACK_TO_MENU, Define.BASE_SIZEY2, TxtManager.TXT_EXIT_RUN);
     }
 
     public static void drawGameOvermenuOption(Graphics g, boolean isActive, int y, int textIndex) {

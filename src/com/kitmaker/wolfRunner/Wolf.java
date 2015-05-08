@@ -35,7 +35,7 @@ public class Wolf extends Vector2 {
     public void initWolf(int rowInPack, int colInPack, int spawnTimelapse) {
         this.rowInPack = rowInPack;
         this.colInPack = colInPack;
-        this.spawnPointX = (int) (WolfPack.x - ((WolfPack.positionOfWolvesInPack[0].length / 2) * width) + (width / 2) + (colInPack * width));
+        this.spawnPointX = (int) (WolfPack.x -  (colInPack * width) + (width / 2));
         this.spawnPointY = (int) (rowInPack * (height) + WolfPack.y);
         this.iSpawnTimelapse = spawnTimelapse;
         state = ST_WOLF_WAITING;
@@ -124,30 +124,30 @@ public class Wolf extends Vector2 {
     public Vector2 _temporalPosition = new Vector2();
 
     public void initFirstSpawnAnimation() {
-        if (colInPack < WolfPack.positionOfWolvesInPack.length / 2) {
+        if (colInPack > WolfPack.positionOfWolvesInPack.length / 2) {
             _bez = new BezierCurve(
                     //primer punto
                     -width,
-                    Define.BASE_SIZEY2,
+                    Define.SIZEY,
                     //Segundo punto
-                    Define.BASE_SIZEX2 - Define.BASE_SIZEX4,
-                    Define.BASE_SIZEY2,
+                    Define.SIZEX2 - Define.SIZEX4,
+                    Define.SIZEY2,
                     //Tercer punto
-                    Define.BASE_SIZEX2 - Define.BASE_SIZEX4,
+                    Define.SIZEX2 - Define.SIZEX4,
                     (int) (spawnPointY),
                     //Cuarto punto
                     (int) (spawnPointX),
                     (int) (spawnPointY));
-        } else if (colInPack > WolfPack.positionOfWolvesInPack[0].length / 2) {
+        } else if (colInPack < WolfPack.positionOfWolvesInPack[0].length / 2) {
             _bez = new BezierCurve(
                     //primer punto
-                    Define.BASE_SIZEX + width,
-                    Define.BASE_SIZEY2,
+                    Define.SIZEX + width,
+                    Define.SIZEY,
                     //Segundo punto
-                    Define.BASE_SIZEX2 + Define.BASE_SIZEX4,
-                    Define.BASE_SIZEY2,
+                    Define.SIZEX2 + Define.SIZEX4,
+                    Define.SIZEY2,
                     //Tercer punto
-                    Define.BASE_SIZEX2 + Define.BASE_SIZEX4,
+                    Define.SIZEX2 + Define.SIZEX4,
                     (int) (spawnPointY),
                     //Cuarto punto
                     (int) (spawnPointX),
@@ -155,11 +155,11 @@ public class Wolf extends Vector2 {
         } else {
             _bez = new BezierCurve(
                     //primer punto
-                    Define.BASE_SIZEX2 + (width * colInPack),
-                    Define.BASE_SIZEY + height,
+                    Define.SIZEX2 - (width * colInPack) + (width / 2),
+                    Define.SIZEY + height,
                     //Segundo punto
-                    Define.BASE_SIZEX2 + (width * colInPack),
-                    Define.BASE_SIZEY - height,
+                    Define.SIZEX2 + (width * colInPack),
+                    Define.SIZEY - height,
                     //Tercer punto
                     (int) spawnPointX,
                     (int) (spawnPointY + ((Define.BASE_SIZEY - spawnPointY) / 2)),
@@ -200,7 +200,7 @@ public class Wolf extends Vector2 {
     public float animationPixelsPerSecY;
 
     public void animateRespawn() {
-        this.spawnPointX = (int) (WolfPack.x - ((WolfPack.positionOfWolvesInPack[0].length / 2) * width) + (width / 2) + (colInPack * width));
+        this.spawnPointX = (int) (WolfPack.x -  (colInPack * width)+ (width / 2));
         animationPixelsPerSecX = (spawnPointX - x);
         animationPixelsPerSecY = (spawnPointY - y);
         if (Math.abs(animationPixelsPerSecX) < 2 && Math.abs(animationPixelsPerSecY) < 2) {
@@ -220,7 +220,7 @@ public class Wolf extends Vector2 {
     public void move() {
         //x of wolfpack - the total amount of wolves /2 * a wolf width
         //+ half width of a wolf + the position of the wolf in the pack * its width 
-        x = (int) (WolfPack.x - ((WolfPack.positionOfWolvesInPack[0].length / 2) * width) + (width / 2) + (colInPack * width));
+        x = (int) (WolfPack.x - (colInPack * width)+ (width / 2));
         if (y < WolfPack.jumpPoint
                 && y + height > WolfPack.jumpPoint) {
             tryJumping();
@@ -259,15 +259,15 @@ public class Wolf extends Vector2 {
 
     public void collideWithObstacle() {
         //Check the whole array of tiles
-        for (int i = 0; i < Scenario.ms_iTiles.length; i++) {
-            for (int e = 0; e < Scenario.ms_iTiles[i].length; e++) {
+        for (int i = 0; i < Scenario.iMapTiles.length; i++) {
+            for (int e = 0; e < Scenario.iMapTiles[i].length; e++) {
                 //checking tiles alive
-                switch (Scenario.ms_iTiles[i][e]) {
+                switch (Scenario.iMapTiles[i][e]) {
                     case Scenario.ROCK_TILE:
                         //check the wolves array
                         if (checkColision(
                                 Scenario.TILE_WIDTH * e,
-                                Scenario.ms_iFirstTileY + (Scenario.TILE_HEIGHT * i),
+                                Scenario.iFirstTileY + (Scenario.TILE_HEIGHT * i),
                                 Scenario.TILE_WIDTH,
                                 Scenario.TILE_HEIGHT)) {
                             if (WolfPack.isInmortal || state == ST_WOLF_ANIMATING) {

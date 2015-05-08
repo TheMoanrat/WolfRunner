@@ -15,25 +15,18 @@ public class Scenario {
 
     public static final int TILE_HEIGHT = GfxManager.TILE_DATA[0][GfxManager.SPR_HEIGHT];
     public static final int TILE_WIDTH = GfxManager.TILE_DATA[0][GfxManager.SPR_WIDTH];
-    public static int ms_iTiles[][] = new int[1 + Define.BASE_SIZEY / TILE_HEIGHT][1 + Define.BASE_SIZEX / TILE_WIDTH];
-    public static int ms_iFirstTileY;
-    public static boolean isSingleObstacle;
-    public static boolean _isBigObstacle;
-    public static boolean isObstacleComing;
-    public static int ms_iObstacleRow;
-    public static int ms_iActualRowToObstacle;
-    public static int ms_iObstacleCol;
-    public static int ms_iObstacle;
+    public static int iMapTiles[][] = new int[1 + Define.BASE_SIZEY / TILE_HEIGHT][1 + Define.BASE_SIZEX / TILE_WIDTH];
+    public static int iFirstTileY;
     public static final int GRASS_TILE = 0;
     public static final int ROCK_TILE = 1;
-    //TODO Temporal
-    private static final int MAX_ROW_TO_OBSTACLE = 10;
-    private static final int MIN_ROW_TO_OBSTACLE = 5;
+    public static final int RIVER_TILE_START = 2;
+    public static final int RIVER_TILE_END = 3;
 
     public static void init() {
-        ms_iFirstTileY = -GfxManager.TILE_DATA[0][GfxManager.SPR_HEIGHT];
+        iFirstTileY = -GfxManager.TILE_DATA[0][GfxManager.SPR_HEIGHT];
         isSingleObstacle = true;
         generateSmallObstacle();
+        generateBigObstacle();
     }
 
     public static void Run() {
@@ -50,44 +43,55 @@ public class Scenario {
                 moveTiles();
         }
     }
+    public static boolean isSingleObstacle;
+    public static boolean isBigObstacle;
 
     public static void moveTiles() {
-        ms_iFirstTileY += WolfPack.packSpeedY;
-        if (ms_iFirstTileY > 0) {
-            int[] aux1 = new int[ms_iTiles[0].length];
+        iFirstTileY += WolfPack.packSpeedY;
+        if (iFirstTileY > 0) {
+            //arrays to help move the tiles down
+            int[] aux1 = new int[iMapTiles[0].length];
             int[] aux2 = generateTiles();
 
-            for (int i = 0; i < ms_iTiles.length; i++) {
-                for (int e = 0; e < ms_iTiles[i].length; e++) {
-                    aux1[e] = ms_iTiles[i][e];
-                    ms_iTiles[i][e] = aux2[e];
+            for (int i = 0; i < iMapTiles.length; i++) {
+                for (int e = 0; e < iMapTiles[i].length; e++) {
+                    aux1[e] = iMapTiles[i][e];
+                    iMapTiles[i][e] = aux2[e];
                     aux2[e] = aux1[e];
                 }
             }
-            ms_iFirstTileY = -TILE_HEIGHT;
-            ms_iActualRowToObstacle++;
-            generateTiles();
+            iFirstTileY = -TILE_HEIGHT;
+            rowsToObstacle--;
         }
     }
+    public static boolean bObstacleThrown;
 
     public static int[] generateTiles() {
-        //TODO implement bigObstacles
-        int[] nextRow = new int[ms_iTiles[0].length];
-        if (isObstacleComing) {
-            if (isSingleObstacle) {
-                for (int i = 0; i < ms_iTiles[0].length; i++) {
-                    if (i == ms_iObstacleCol) {
-                        nextRow[i] = ms_iObstacle;
-                    } else {
-                        nextRow[i] = GRASS_TILE;
-                    }
+        int[] nextRow = new int[iMapTiles[0].length];
+        if (isSingleObstacle && !bObstacleThrown) {
+            for (int i = 0; i < nextRow.length; i++) {
+                if (i == iObstacleCol) {
+                    nextRow[i] = iObstacleTileType;
+                } else {
+                    nextRow[i] = GRASS_TILE;
                 }
             }
-            generateSmallObstacle();
-            ms_iActualRowToObstacle = 0;
-            isObstacleComing = false;
+            bObstacleThrown = true;
+            obstaclesToBig--;
+        } else if (isBigObstacle && !bObstacleThrown) {
+
+            iBigObstTileType++;
+            if (iBigObstTileType > iEndBig) {
+                isBigObstacle = false;
+                isSingleObstacle = true;
+                bObstacleThrown = true;
+            } else {
+                for (int i = 0; i < nextRow.length; i++) {
+                    nextRow[i] = iBigObstTileType;
+                }
+            }
         } else {
-            for (int i = 0; i < ms_iTiles[0].length; i++) {
+            for (int i = 0; i < iMapTiles[0].length; i++) {
                 nextRow[i] = GRASS_TILE;
             }
         }
@@ -95,16 +99,38 @@ public class Scenario {
     }
 
     public static void checkObstacleIncome() {
-        if (ms_iObstacleRow <= ms_iActualRowToObstacle) {
-            isObstacleComing = true;
+        if (rowsToObstacle <= 0 && bObstacleThrown) {
+            bObstacleThrown = false;
+            isSingleObstacle = true;
+            generateSmallObstacle();
+        } else if (obstaclesToBig <= 0 && bObstacleThrown) {
+            bObstacleThrown = false;
+            isSingleObstacle = false;
+            isBigObstacle = true;
+            generateBigObstacle();
+
         }
     }
+    public static int rowsToObstacle;
+    public static int iObstacleCol;
+    public static int iObstacleTileType;
+    //TODO Temporal
+    private static final int MAX_ROW_TO_OBSTACLE = 10;
+    private static final int MIN_ROW_TO_OBSTACLE = 5;
 
     public static void generateSmallObstacle() {
-        ms_iActualRowToObstacle = 0;
-        ms_iObstacleRow = Main.Random(MIN_ROW_TO_OBSTACLE, MAX_ROW_TO_OBSTACLE);
-        ms_iObstacleCol = Main.Random(0, ms_iTiles[0].length);
-        ms_iObstacle = ROCK_TILE;
+        rowsToObstacle = Main.Random(MIN_ROW_TO_OBSTACLE, MAX_ROW_TO_OBSTACLE);
+        iObstacleCol = Main.Random(0, iMapTiles[0].length);
+        iObstacleTileType = ROCK_TILE;
+    }
+    public static int obstaclesToBig;
+    public static int iEndBig;
+    public static int iBigObstTileType;
+
+    public static void generateBigObstacle() {
+        obstaclesToBig = Main.Random(MIN_ROW_TO_OBSTACLE, MAX_ROW_TO_OBSTACLE);
+        iBigObstTileType = RIVER_TILE_START-1;
+        iEndBig = RIVER_TILE_END;
     }
 
     public static void Draw(Graphics _g) {
@@ -113,14 +139,20 @@ public class Scenario {
 
     public static void drawTiles(Graphics _g) {
         _g.setClip(0, 0, Define.BASE_SIZEX, Define.BASE_SIZEY);
-        for (int i = 0; i < ms_iTiles.length; i++) {
-            for (int e = 0; e < ms_iTiles[i].length; e++) {
-                switch (ms_iTiles[i][e]) {
+        for (int i = 0; i < iMapTiles.length; i++) {
+            for (int e = 0; e < iMapTiles[i].length; e++) {
+                switch (iMapTiles[i][e]) {
                     case GRASS_TILE:
                         drawTile(_g, i, e, GfxManager.GFXID_GRASSTILE);
                         break;
                     case ROCK_TILE:
                         drawTile(_g, i, e, GfxManager.GFXID_ROCKTILE);
+                        break;
+                    case RIVER_TILE_START:
+                        drawTile(_g, i, e, GfxManager.GFXID_FIRST_RIVER_TILE);
+                        break;
+                    case RIVER_TILE_END:
+                        drawTile(_g, i, e, GfxManager.GFXID_THIRD_RIVER_TILE);
                         break;
                 }
             }
@@ -130,7 +162,7 @@ public class Scenario {
     public static void drawTile(Graphics _g, int i, int e, int gfxID) {
         _g.drawImage(GfxManager.ms_vImage[gfxID],
                 TILE_WIDTH * e,
-                ms_iFirstTileY + (TILE_HEIGHT * i),
+                iFirstTileY + (TILE_HEIGHT * i),
                 0);
     }
 }

@@ -98,53 +98,7 @@ public class Main extends Canvas implements Runnable
     public static long deltaTime;
     public static final float SECOND = 1000;
 
-    static void DrawNavigationIcons(Graphics _g, int _iSKLeft, int _iSKRight) {
-        // left softkey
-        if (_iSKLeft == Define.SK_OK) {
-            _g.setClip(0, 
-                    Define.SIZEY - GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getHeightHalf(),
-                    GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getWidthHalf(), 
-                    GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getHeightHalf());
-            
-            if (ms_bSoftLeft) {
-                _g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU],
-                        0, Define.SIZEY - GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getHeight(), 0);
-            } else {
-                _g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU],
-                        0, Define.SIZEY - (GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getHeight() >> 1), 0);
-            }
-        }
-        
-        // right softkey
-        if (_iSKRight == Define.SK_BACK) {
-            _g.setClip(Define.SIZEX - (GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getWidth() >> 1),
-                    Define.SIZEY - (GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getHeight() >> 1),
-                    GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getWidth() >> 1,
-                    GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getHeight() >> 1);
-
-            if (ms_bSoftRight) {
-                _g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU],
-                        Define.SIZEX - GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getWidth(),
-                        Define.SIZEY - GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getHeight(),
-                        0);
-            } else {
-                _g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU],
-                        Define.SIZEX - GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getWidth(),
-                        Define.SIZEY - (GfxManager.ms_vImage[GfxManager.GFXID_SK_MENU].getHeight() >> 1),
-                        0);
-            }
-        }
-        if (_iSKRight == Define.SK_PAUSE) {
-
-            if (ms_bSoftRight) {
-
-            } else {
-                
-            }
-        }
-        _g.setClip(0, 0, Define.SIZEX, Define.SIZEY);
-        
-    }
+   
 
     public Main(WolfRunner midlet) {
         
@@ -167,6 +121,8 @@ public class Main extends Canvas implements Runnable
         FntManager.LoadFont(FntManager.FONT_INACTIVE);
         FntManager.LoadFont(FntManager.FONT_ACTIVE);
         FntManager.LoadFont(FntManager.FONT_INGAME);
+        FntManager.LoadFont(FntManager.FONT_TITLE);
+
 
         Debug.DebugReadPostmortemData();
         RmsManager.RmsLoadSaveData(RmsManager.FILE_SYS, RmsManager.MODE_LOAD);

@@ -46,19 +46,22 @@ public class GfxManager {
     static final String GFX_FORMAT = ".png";
     static final String[] GFX_FILENAME = {
         //init
-        GFX_PREV + "logo" + GFX_FORMAT, //00 
-        GFX_PREV + "boton" + GFX_FORMAT, //01
-        GFX_PREV + "sk_home" + GFX_FORMAT, //02
-        GFX_PREV + "sk_menu" + GFX_FORMAT, //03
-        GFX_PREV + "sk_next" + GFX_FORMAT, //04
-        GFX_PREV + "sk_reset" + GFX_FORMAT, //05
+        GFX_PREV + "logo" + GFX_FORMAT,  
+        GFX_PREV + "boton" + GFX_FORMAT, 
+        GFX_PREV + "sk_home" + GFX_FORMAT, 
+        GFX_PREV + "sk_menu" + GFX_FORMAT, 
+        GFX_PREV + "sk_next" + GFX_FORMAT, 
+        GFX_PREV + "sk_reset" + GFX_FORMAT, 
+        GFX_PREV + "menubackground" + GFX_FORMAT, 
+        GFX_PREV + "titleheader" + GFX_FORMAT, 
+        GFX_PREV + "lifeicon" + GFX_FORMAT, 
         //Wolves
-        GFX_PREV + "wolfbrown" + GFX_FORMAT, //06
+        GFX_PREV + "wolfbrown" + GFX_FORMAT, 
         // tiles
-        GFX_PREV + "grasstile" + GFX_FORMAT, //07
-        GFX_PREV + "sidetreetile" + GFX_FORMAT, //8
-        GFX_PREV + "rocktile" + GFX_FORMAT, //9
-        GFX_PREV + "lifeicon" + GFX_FORMAT, //10
+        GFX_PREV + "grasstile" + GFX_FORMAT, 
+        GFX_PREV + "rocktile" + GFX_FORMAT, 
+        GFX_PREV + "startrivertile" + GFX_FORMAT, 
+        GFX_PREV + "endrivertile" + GFX_FORMAT, 
     };
     static final byte FLG_TRANSFORMABLE = 1;  // Allows horizontal/vertical mirroring !!DEPRECATED!!
     static final byte FLG_OPAQUE = 2;  // Allows a certain memory optimization
@@ -74,20 +77,25 @@ public class GfxManager {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 60
     };
     // Init
-    //Menu
+    //Menu//
     public static final int GFXID_LOGO = 0;
-    public static final int GFXID_MENU_BUTTONS = 1;
-    public static final int GFXID_SK_HOME = 2;
-    public static final int GFXID_SK_MENU = 3;
-    public static final int GFXID_SK_NEXT = 4;
-    public static final int GFXID_SK_RESET = 5;
-    //Wolves
-    public static final int GFXID_WOLF = 6;
-    //Tiles
-    public static final int GFXID_GRASSTILE = 7;
-    public static final int GFXID_SIDE_TREETILE = 8;
-    public static final int GFXID_ROCKTILE = 9;
-    public static final int GFXID_LIFES_ICON = 10;
+    public static final int GFXID_MENU_BUTTONS = GFXID_LOGO+1;
+    public static final int GFXID_SK_HOME = GFXID_MENU_BUTTONS+1;
+    public static final int GFXID_SK_MENU = GFXID_SK_HOME+1;
+    public static final int GFXID_SK_NEXT = GFXID_SK_MENU+1;
+    public static final int GFXID_SK_RESET = GFXID_SK_NEXT+1;
+    public static final int GFXID_MENU_BACKGROUND = GFXID_SK_RESET+1;
+    public static final int GFXID_TITLE_HEADER = GFXID_MENU_BACKGROUND+1;
+    public static final int GFXID_LIFES_ICON = GFXID_TITLE_HEADER+1;
+
+    //Wolves//
+    public static final int GFXID_WOLF = GFXID_LIFES_ICON+1;
+    //Tiles//
+    public static final int GFXID_GRASSTILE = GFXID_WOLF+1;
+    public static final int GFXID_ROCKTILE = GFXID_GRASSTILE+1;
+    public static final int GFXID_FIRST_RIVER_TILE = GFXID_ROCKTILE+1;
+    public static final int GFXID_THIRD_RIVER_TILE = GFXID_FIRST_RIVER_TILE+1;
+    ///////SPR_DATA_INDEX//////
     public static final int SPR_ID = 0;
     public static final int SPR_POS_X = 1;
     public static final int SPR_POS_Y = 2;
@@ -97,15 +105,20 @@ public class GfxManager {
     public static final int SPR_HOT_Y = 6;
     //Index data to acces to info graphics sprites:
     //Menu
+   ///////SPR_ID//////
     public static final int SPRID_BUTTON = 0;
-    public static final int SPRID_SK_HOME = 2;
-    public static final int SPRID_SK_MENU = 4;
-    public static final int SPRID_SK_NEXT = 8;
-    public static final int SPRID_SK_RESET = 10;
+    public static final int SPRID_SK_HOME = SPRID_BUTTON+2;
+    public static final int SPRID_SK_MENU = SPRID_SK_HOME+2;
+    public static final int SPRID_SK_NEXT = SPRID_SK_MENU+4;
+    public static final int SPRID_SK_RESET = SPRID_SK_NEXT+2;
+    public static final int SPRID_MENU_BACKGROUND = SPRID_SK_RESET+2;
+    public static final int SPRID_TITLE_HEADER = SPRID_MENU_BACKGROUND+1;
+        //lifeIcon
+    public static final int SPRID_LIFES_ICON = SPRID_TITLE_HEADER+1;
+
     //Wolves
-    public static final int SPRID_WOLF = 12;
-    //lifeIcon
-    public static final int SPRID_LIFES_ICON = 22;
+    public static final int SPRID_WOLF = SPRID_LIFES_ICON+1;
+
     //#if SIZE == "Small"
 //#      static short [][] SPRITE_DATA = {
 //#     };
@@ -116,16 +129,25 @@ public class GfxManager {
     public static short[][] SPRITE_DATA = {
         {GFXID_MENU_BUTTONS, 0, 0, 182, 40, 0, 0},
         {GFXID_MENU_BUTTONS, 0, 40, 182, 40, 0, 0},
+        
         {GFXID_SK_HOME, 0, 0, 46, 46, 0, 0},
         {GFXID_SK_HOME, 0, 46, 46, 46, 0, 0},
+        
         {GFXID_SK_MENU, 0, 0, 46, 46, 0, 0},
         {GFXID_SK_MENU, 0, 46, 46, 46, 0, 0},
         {GFXID_SK_MENU, 46, 0, 46, 46, 0, 0},
         {GFXID_SK_MENU, 46, 46, 46, 46, 0, 0},
+        
         {GFXID_SK_NEXT, 0, 0, 46, 46, 0, 0},
         {GFXID_SK_NEXT, 0, 46, 46, 46, 0, 0},
+        
         {GFXID_SK_RESET, 0, 0, 46, 46, 0, 0},
         {GFXID_SK_RESET, 0, 46, 46, 46, 0, 0},
+        
+        {GFXID_MENU_BACKGROUND, 0, 0, 240, 320, 0, 0},
+        {GFXID_TITLE_HEADER, 0, 0, 108, 84, 0, 0},
+        {GFXID_LIFES_ICON, 0, 0, 17, 21, 0, 0},
+
         //0,1,2,3,4 Wolf runing
         //5,6, Wolf jumping
         //7,8 ,9 Wolf dead
@@ -140,7 +162,6 @@ public class GfxManager {
         {GFXID_WOLF, 23, 58, 23, 58, 0, 0},
         {GFXID_WOLF, 46, 58, 23, 58, 0, 0},
         //Lifes icon
-        {GFXID_LIFES_ICON, 0, 0, 17, 21, 0, 0},
     };
     //#elif SIZE == "Extra"
 //#     public static short [][] SPRITE_DATA = {
@@ -151,8 +172,9 @@ public class GfxManager {
     //#endif
     //Tiles
     public static final int SPRID_GRASSTILE = 0;
-    public static final int SPRID_SIDE_TREETILE = 1;
-    public static final int SPRID_ROCKTILE = 3;
+    public static final int SPRID_ROCKTILE = SPRID_GRASSTILE + 1;
+    public static final int SPRID_FIRST_RIVER_TILE = SPRID_ROCKTILE + 1;
+    public static final int SPRID_THIRD_RIVER_TILE = SPRID_FIRST_RIVER_TILE + 1;
     //#if SIZE == "Small"
 //#     public static short [][] TILE_DATA = {
 //#     };
@@ -163,9 +185,11 @@ public class GfxManager {
     //#elif SIZE == "Large"
     public static short[][] TILE_DATA = {
         {GFXID_GRASSTILE, 0, 0, 32, 32, 0, 0},
-        {GFXID_SIDE_TREETILE, 0, 0, 32, 32, 0, 0},
-        {GFXID_SIDE_TREETILE, 32, 0, 32, 32, 0, 0},
-        {GFXID_GRASSTILE, 0, 0, 32, 32, 0, 0},};
+        {GFXID_ROCKTILE, 0, 0, 32, 32, 0, 0},
+        {GFXID_FIRST_RIVER_TILE, 0, 0, 32, 32, 0, 0},
+        {GFXID_THIRD_RIVER_TILE, 0, 0, 32, 32, 0, 0},
+};
+    
     //#elif SIZE == "Extra"
 //#     public static short [][] TILE_DATA = {
 //#     };
@@ -190,6 +214,10 @@ public class GfxManager {
     public static final byte SK_RESET[] = {
         SPRID_SK_RESET,
         SPRID_SK_RESET + 1,};
+    public static final byte TITLE[] = {
+        SPRID_TITLE_HEADER,};
+    public static final byte LIFES_ICON[] = {
+        SPRID_LIFES_ICON,};
     public static final byte WOLF[] = {
         SPRID_WOLF,
         SPRID_WOLF + 1,
@@ -201,16 +229,20 @@ public class GfxManager {
         SPRID_WOLF + 7,
         SPRID_WOLF + 8,
         SPRID_WOLF + 9,};
-
+    public static final byte MENU_BACKGROUND[] = {
+        SPRID_MENU_BACKGROUND,
+        };
+    public static final byte TITLE_HEADER[] = {
+        SPRID_TITLE_HEADER,
+        };            
     public static final byte GRASS_TILE[] = {
         SPRID_GRASSTILE,};
-    public static final byte SIDE_TREE_TILE[] = {
-        SPRID_SIDE_TREETILE,
-        SPRID_SIDE_TREETILE + 1,};
     public static final byte ROCK_TILE[] = {
         SPRID_ROCKTILE,};
-        public static final byte LIFES_ICON[] = {
-        SPRID_LIFES_ICON,};
+        public static final byte RIVER_TILE[] = {
+        SPRID_FIRST_RIVER_TILE,
+        SPRID_THIRD_RIVER_TILE};
+
     // GRAPHICS
     public static Image[] ms_vImage;
     // Sprites y paletas empaquetados
@@ -868,7 +900,7 @@ public class GfxManager {
 
                         //#if API=="Motorola" || API=="SonyEricsson" || ku380
 //#                         if (((destPixels[srcW - 1 - iX] >> 24) & 0xFF) != 0) //#else
-                        //#                   if (destPixels[srcW-1-iX] != ms_iTransparentColor)
+//#                   if (destPixels[srcW-1-iX] != ms_iTransparentColor)
                         //#endif
                         {
                             destPixels[srcW - 1 - iX] = _iColor;
@@ -888,7 +920,7 @@ public class GfxManager {
 
                         //#if API=="Motorola" || API=="SonyEricsson" || ku380
 //#                         if (((destPixels[iX] >> 24) & 0xFF) != 0) //#else
-                        //#                   if (destPixels[iX] != ms_iTransparentColor)
+//#                   if (destPixels[iX] != ms_iTransparentColor)
                         //#endif
                         {
                             destPixels[iX] = _iColor;

@@ -58,6 +58,7 @@ public class FntManager {
     public static final int FONT_INACTIVE = 0;
     public static final int FONT_ACTIVE = 1;
     public static final int FONT_INGAME = 2;
+    public static final int FONT_TITLE = 3;
     //#endif
     
     // graphic fonts
@@ -65,6 +66,7 @@ public class FntManager {
         "font1",
         "font2",
         "font3",
+        "font4",
     };
 
     public static final String BASE_SIZE [] = {
