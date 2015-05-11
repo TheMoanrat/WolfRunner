@@ -64,6 +64,7 @@ public class WolfPack {
         {0, 1, 0,},
         {1, 1, 1,},
         {0, 1, 0,},};
+    //I double the quantity of wolves in case the whole pack dies at the same time there are always disponible wolfs
     public static Wolf[] ms_wolves = new Wolf[2*(positionOfWolvesInPack.length * positionOfWolvesInPack[0].length)];
 
     public static void init() {

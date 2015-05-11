@@ -83,13 +83,13 @@ public class Wolf extends Vector2 {
                         }
                         break;
                     case ST_WOLF_DYING:
-                        die();
+                        deathAnimation();
                         break;
                 }
                 //</editor-fold>
                 break;
             case Define.ST_GAME_OVER:
-                die();
+                deathAnimation();
                 break;
         }
 
@@ -248,7 +248,7 @@ public class Wolf extends Vector2 {
     public final float DEATH_FRAME1_DURATION = DEATH_DURATION / 4;
     public final float DEATH_FRAME2_DURATION = DEATH_DURATION / 2;
 
-    public void die() {
+    public void deathAnimation() {
         deathCountdown += Main.deltaTime;
         if (deathCountdown < DEATH_DURATION) {
             if (deathCountdown < DEATH_FRAME1_DURATION) {
@@ -265,6 +265,24 @@ public class Wolf extends Vector2 {
             state = ST_WOLF_INACTIVE;
         }
     }
+    //TODO apply dust clouds
+//    public final int DUST_CLOUDS_AMOUNT = 5;
+//    public int dustCountdown[] = new int[DUST_CLOUDS_AMOUNT];
+//    public int dustFrame[] = new int[dustCountdown.length];
+//    public final float DUST_CLOUD_DURATION = 1 * Main.SECOND;
+//    public final float DUST_FRAME_DURATION = (DUST_CLOUD_DURATION / 5);
+//    public int totalDustCountdown;
+//    public final float DUST_TOTAL_DURATION = DUST_CLOUD_DURATION * DUST_CLOUDS_AMOUNT;
+//
+//    public void dustAnimation() {
+//        totalDustCountdown += Main.deltaTime;
+//        if(totalDustCountdown<DUST_TOTAL_DURATION){
+//            if()
+//            }
+//        }else{
+//            
+//        }
+//    }
 
     public void Draw(Graphics g) {
         switch (state) {

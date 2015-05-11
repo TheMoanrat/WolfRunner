@@ -55,6 +55,7 @@ public class GfxManager {
         GFX_PREV + "menubackground" + GFX_FORMAT, 
         GFX_PREV + "titleheader" + GFX_FORMAT, 
         GFX_PREV + "lifeicon" + GFX_FORMAT, 
+        GFX_PREV + "dustanimation" + GFX_FORMAT, 
         //Wolves
         GFX_PREV + "wolfbrown" + GFX_FORMAT, 
         // tiles
@@ -81,21 +82,25 @@ public class GfxManager {
     //Menu//
     public static final int GFXID_LOGO = 0;
     public static final int GFXID_MENU_BUTTONS = GFXID_LOGO+1;
+    //menu buttons//
     public static final int GFXID_SK_HOME = GFXID_MENU_BUTTONS+1;
     public static final int GFXID_SK_MENU = GFXID_SK_HOME+1;
     public static final int GFXID_SK_NEXT = GFXID_SK_MENU+1;
     public static final int GFXID_SK_RESET = GFXID_SK_NEXT+1;
+    //menu images//
     public static final int GFXID_MENU_BACKGROUND = GFXID_SK_RESET+1;
     public static final int GFXID_TITLE_HEADER = GFXID_MENU_BACKGROUND+1;
+    //lifes icon//
     public static final int GFXID_LIFES_ICON = GFXID_TITLE_HEADER+1;
-
+    //dust//
+    public static final int GFXID_DUST = GFXID_LIFES_ICON+1;
     //Wolves//
-    public static final int GFXID_WOLF = GFXID_LIFES_ICON+1;
+    public static final int GFXID_WOLF = GFXID_DUST+1;
     //Tiles//
     public static final int GFXID_GRASSTILE = GFXID_WOLF+1;
     public static final int GFXID_ROCKTILE = GFXID_GRASSTILE+1;
     public static final int GFXID_FIRST_RIVER_TILE = GFXID_ROCKTILE+1;
-        public static final int GFXID_SECOND_RIVER_TILE = GFXID_FIRST_RIVER_TILE+1;
+    public static final int GFXID_SECOND_RIVER_TILE = GFXID_FIRST_RIVER_TILE+1;
     public static final int GFXID_THIRD_RIVER_TILE = GFXID_SECOND_RIVER_TILE+1;
     ///////SPR_DATA_INDEX//////
     public static final int SPR_ID = 0;
@@ -117,9 +122,9 @@ public class GfxManager {
     public static final int SPRID_TITLE_HEADER = SPRID_MENU_BACKGROUND+1;
         //lifeIcon
     public static final int SPRID_LIFES_ICON = SPRID_TITLE_HEADER+1;
-
+    public static final int SPRID_DUST = SPRID_LIFES_ICON+1;
     //Wolves
-    public static final int SPRID_WOLF = SPRID_LIFES_ICON+1;
+   public static final int SPRID_WOLF = SPRID_DUST+5;
 
     //#if SIZE == "Small"
 //#      static short [][] SPRITE_DATA = {
@@ -149,7 +154,13 @@ public class GfxManager {
         {GFXID_MENU_BACKGROUND, 0, 0, 240, 320, 0, 0},
         {GFXID_TITLE_HEADER, 0, 0, 108, 84, 0, 0},
         {GFXID_LIFES_ICON, 0, 0, 17, 21, 0, 0},
-
+        
+        //dust animation
+        {GFXID_DUST, 0, 0, 32, 32, 0, 0},
+        {GFXID_DUST, 0, 32, 32, 32, 0, 0},
+        {GFXID_DUST, 0, 64, 32, 32, 0, 0},
+        {GFXID_DUST, 0, 96, 32, 32, 0, 0},
+        {GFXID_DUST, 0, 128, 32, 32, 0, 0},
         //0,1,2,3,4 Wolf runing
         //5,6, Wolf jumping
         //7,8 ,9 Wolf dead
@@ -222,6 +233,13 @@ public class GfxManager {
         SPRID_TITLE_HEADER,};
     public static final byte LIFES_ICON[] = {
         SPRID_LIFES_ICON,};
+        public static final byte DUST[] = {
+        SPRID_DUST,
+        SPRID_DUST+1,
+        SPRID_DUST+2,
+        SPRID_DUST+3,
+        SPRID_DUST+4,
+        };
     public static final byte WOLF[] = {
         SPRID_WOLF,
         SPRID_WOLF + 1,
