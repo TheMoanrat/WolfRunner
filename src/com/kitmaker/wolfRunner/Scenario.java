@@ -20,7 +20,7 @@ public class Scenario {
     public static final int GRASS_TILE = 0;
     public static final int ROCK_TILE = 1;
     public static final int RIVER_TILE_START = 2;
-    public static final int RIVER_TILE_END = 3;
+    public static final int RIVER_TILE_END = 4;
 
     public static void init() {
         iFirstTileY = -GfxManager.TILE_DATA[0][GfxManager.SPR_HEIGHT];
@@ -129,7 +129,7 @@ public class Scenario {
 
     public static void generateBigObstacle() {
         obstaclesToBig = Main.Random(MIN_ROW_TO_OBSTACLE, MAX_ROW_TO_OBSTACLE);
-        iBigObstTileType = RIVER_TILE_START-1;
+        iBigObstTileType = RIVER_TILE_START - 1;
         iEndBig = RIVER_TILE_END;
     }
 
@@ -150,6 +150,9 @@ public class Scenario {
                         break;
                     case RIVER_TILE_START:
                         drawTile(_g, i, e, GfxManager.GFXID_FIRST_RIVER_TILE);
+                        break;
+                    case RIVER_TILE_START + 1:
+                        drawTile(_g, i, e, GfxManager.GFXID_SECOND_RIVER_TILE);
                         break;
                     case RIVER_TILE_END:
                         drawTile(_g, i, e, GfxManager.GFXID_THIRD_RIVER_TILE);

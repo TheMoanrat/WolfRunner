@@ -22,7 +22,7 @@ public class WolfPack {
     public static int packSpeedY;
     public static int jumpPoint;
     public static boolean ms_isJumping;
-    public static int wolfLives;
+    public static int wolfLifes;
     public static int wolvesAlive;
     public static boolean isInmortal;
 
@@ -64,18 +64,22 @@ public class WolfPack {
         {0, 1, 0,},
         {1, 1, 1,},
         {0, 1, 0,},};
-    public static Wolf[] ms_wolves = new Wolf[positionOfWolvesInPack.length * positionOfWolvesInPack[0].length];
+    public static Wolf[] ms_wolves = new Wolf[2*(positionOfWolvesInPack.length * positionOfWolvesInPack[0].length)];
 
     public static void init() {
-        wolfLives = 100;
+        wolfLifes = 100;
         x = Define.BASE_SIZEX2;
         y = Define.BASE_SIZEY2;
         for (int i = 0; i < ms_wolves.length; i++) {
             ms_wolves[i] = new Wolf();
         }
-        for (int i = 0; i < wolfLives; i++) {
+        for (int i = 0; i < wolfLifes; i++) {
             if (i < ms_wolves.length) {
-                placeWolfInPack(ms_wolves[i]);
+                if (placeNewWolfInPack(ms_wolves[i])) {
+                    continue;
+                } else {
+                    break;
+                }
             } else {
                 break;
             }
@@ -83,26 +87,24 @@ public class WolfPack {
         checkPackWidth();
     }
 
-    public static void placeWolfInPack(Wolf wolf) {
+    public static boolean placeNewWolfInPack(Wolf wolf) {
         for (int i = 0; i < positionOfWolvesInPack.length; i++) {
             for (int e = 0; e < positionOfWolvesInPack[i].length; e++) {
                 if (positionOfWolvesInPack[i][e] == 1) {
-                    wolf.initWolf(
-                            i,
-                            e,
-                            (int) (Main.SECOND * i));
+                    wolf.initWolf(i,e,(int) (Main.SECOND * i));
                     positionOfWolvesInPack[i][e] = 2;
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     public static void checkPackWidth() {
         int _tempNumWolvesInCol = 0;
         for (int fila = 0; fila < positionOfWolvesInPack.length; fila++) {
             for (int columna = 0; columna < positionOfWolvesInPack[fila].length; columna++) {
-                if (positionOfWolvesInPack[fila][columna] == 2
+                if (positionOfWolvesInPack[fila][columna] >= 2
                         && _tempNumWolvesInCol < columna) {
                     _tempNumWolvesInCol = columna;
                 }
@@ -127,7 +129,7 @@ public class WolfPack {
         wolvesAlive = 0;
         for (int i = 0; i < positionOfWolvesInPack.length; i++) {
             for (int e = 0; e < positionOfWolvesInPack[i].length; e++) {
-                if (positionOfWolvesInPack[i][e] == 2) {
+                if (positionOfWolvesInPack[i][e] >= 2) {
                     wolvesAlive++;
                 }
             }
@@ -136,7 +138,7 @@ public class WolfPack {
 
     public static void checkWolvesAnimating() {
         for (int i = 0; i < ms_wolves.length; i++) {
-            if (ms_wolves[i].state > 0 && ms_wolves[i].state < Wolf.ST_WOLF_ACTIVE) {
+            if (ms_wolves[i].state > Wolf.ST_WOLF_INACTIVE && ms_wolves[i].state < Wolf.ST_WOLF_ACTIVE) {
                 return;
             }
         }
@@ -189,18 +191,14 @@ public class WolfPack {
     }
 
     //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="colisions">
-    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Damage control">
     public static void killWolf(Wolf w) {
-        wolfLives--;
-        checkWolvesAlive();
+        wolfLifes--;
         w.state = Wolf.ST_WOLF_DYING;
         positionOfWolvesInPack[w.rowInPack][w.colInPack] = 1;
-        isInmortal = true;
-        if (wolfLives > 0) {
-            positionOfWolvesInPack[w.rowInPack][w.colInPack] = 1;
-            if (wolfLives - wolvesAlive >= 0) {
+        checkWolvesAlive();
+        if (wolfLifes > 0) {
+            if (wolfLifes - wolvesAlive >= 0) {
                 respawnWolf();
             }
         } else {
@@ -211,10 +209,9 @@ public class WolfPack {
     }
 
     public static void respawnWolf() {
-        if (wolfLives > 0) {
-            for (int i = 0; i < ms_wolves.length; i++) {
-                if (ms_wolves[i].state == 0) {
-                    placeWolfInPack(ms_wolves[i]);
+        for (int i = 0; i < ms_wolves.length; i++) {
+            if (ms_wolves[i].state == Wolf.ST_WOLF_INACTIVE) {
+                if (placeNewWolfInPack(ms_wolves[i])) {
                     return;
                 }
             }

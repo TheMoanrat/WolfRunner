@@ -61,6 +61,7 @@ public class GfxManager {
         GFX_PREV + "grasstile" + GFX_FORMAT, 
         GFX_PREV + "rocktile" + GFX_FORMAT, 
         GFX_PREV + "startrivertile" + GFX_FORMAT, 
+        GFX_PREV + "midrivertile" + GFX_FORMAT, 
         GFX_PREV + "endrivertile" + GFX_FORMAT, 
     };
     static final byte FLG_TRANSFORMABLE = 1;  // Allows horizontal/vertical mirroring !!DEPRECATED!!
@@ -94,7 +95,8 @@ public class GfxManager {
     public static final int GFXID_GRASSTILE = GFXID_WOLF+1;
     public static final int GFXID_ROCKTILE = GFXID_GRASSTILE+1;
     public static final int GFXID_FIRST_RIVER_TILE = GFXID_ROCKTILE+1;
-    public static final int GFXID_THIRD_RIVER_TILE = GFXID_FIRST_RIVER_TILE+1;
+        public static final int GFXID_SECOND_RIVER_TILE = GFXID_FIRST_RIVER_TILE+1;
+    public static final int GFXID_THIRD_RIVER_TILE = GFXID_SECOND_RIVER_TILE+1;
     ///////SPR_DATA_INDEX//////
     public static final int SPR_ID = 0;
     public static final int SPR_POS_X = 1;
@@ -174,7 +176,8 @@ public class GfxManager {
     public static final int SPRID_GRASSTILE = 0;
     public static final int SPRID_ROCKTILE = SPRID_GRASSTILE + 1;
     public static final int SPRID_FIRST_RIVER_TILE = SPRID_ROCKTILE + 1;
-    public static final int SPRID_THIRD_RIVER_TILE = SPRID_FIRST_RIVER_TILE + 1;
+    public static final int SPRID_SECOND_RIVER_TILE = SPRID_FIRST_RIVER_TILE + 1;
+    public static final int SPRID_THIRD_RIVER_TILE = SPRID_SECOND_RIVER_TILE + 1;
     //#if SIZE == "Small"
 //#     public static short [][] TILE_DATA = {
 //#     };
@@ -187,6 +190,7 @@ public class GfxManager {
         {GFXID_GRASSTILE, 0, 0, 32, 32, 0, 0},
         {GFXID_ROCKTILE, 0, 0, 32, 32, 0, 0},
         {GFXID_FIRST_RIVER_TILE, 0, 0, 32, 32, 0, 0},
+        {GFXID_SECOND_RIVER_TILE, 0, 0, 32, 32, 0, 0},
         {GFXID_THIRD_RIVER_TILE, 0, 0, 32, 32, 0, 0},
 };
     
@@ -241,6 +245,7 @@ public class GfxManager {
         SPRID_ROCKTILE,};
         public static final byte RIVER_TILE[] = {
         SPRID_FIRST_RIVER_TILE,
+        SPRID_SECOND_RIVER_TILE,
         SPRID_THIRD_RIVER_TILE};
 
     // GRAPHICS

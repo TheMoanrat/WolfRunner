@@ -125,6 +125,7 @@ public class ModeGame extends Define {
                 GfxManager.AddGraphic(GfxManager.GFXID_GRASSTILE);
                 GfxManager.AddGraphic(GfxManager.GFXID_ROCKTILE);
                 GfxManager.AddGraphic(GfxManager.GFXID_FIRST_RIVER_TILE);
+                GfxManager.AddGraphic(GfxManager.GFXID_SECOND_RIVER_TILE);
                 GfxManager.AddGraphic(GfxManager.GFXID_THIRD_RIVER_TILE);
                 GfxManager.AddGraphic(GfxManager.GFXID_WOLF);
                 GfxManager.AddGraphic(GfxManager.GFXID_SK_MENU);

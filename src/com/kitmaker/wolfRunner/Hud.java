@@ -26,11 +26,11 @@ public class Hud {
     public static void drawLifes(Graphics g) {
         g.drawImage(GfxManager.ms_vImage[GfxManager.GFXID_LIFES_ICON], Define.BASE_SIZEX24, Define.BASE_SIZEY24, 0);
         FntManager.DrawFont(g, FntManager.FONT_INGAME,
-                "x"+WolfPack.wolfLives ,
+                "x"+WolfPack.wolfLifes ,
                 Define.BASE_SIZEX24+GfxManager.SPRITE_DATA[GfxManager.LIFES_ICON[0]][GfxManager.SPR_WIDTH],
                 Define.BASE_SIZEY24,
                 0,
-                2);
+                3);
     }
 
     public static void drawPoints(Graphics g) {
