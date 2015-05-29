@@ -64,11 +64,14 @@ public class WolfPack {
         {0, 1, 0,},
         {1, 1, 1,},
         {0, 1, 0,},};
-    //I double the quantity of wolves in case the whole pack dies at the same time there are always disponible wolfs
-    public static Wolf[] ms_wolves = new Wolf[2*(positionOfWolvesInPack.length * positionOfWolvesInPack[0].length)];
+    /*
+     * I double the quantity of wolves in case the whole pack dies at the same
+     * time there are always disponible wolfs
+     */
+    public static Wolf[] ms_wolves = new Wolf[2 * (positionOfWolvesInPack.length * positionOfWolvesInPack[0].length)];
 
     public static void init() {
-        wolfLifes = 100;
+        wolfLifes = 1;
         x = Define.BASE_SIZEX2;
         y = Define.BASE_SIZEY2;
         for (int i = 0; i < ms_wolves.length; i++) {
@@ -92,7 +95,7 @@ public class WolfPack {
         for (int i = 0; i < positionOfWolvesInPack.length; i++) {
             for (int e = 0; e < positionOfWolvesInPack[i].length; e++) {
                 if (positionOfWolvesInPack[i][e] == 1) {
-                    wolf.initWolf(i,e,(int) (Main.SECOND * i));
+                    wolf.initWolf(i, e, (int) (Main.SECOND * i));
                     positionOfWolvesInPack[i][e] = 2;
                     return true;
                 }
@@ -153,10 +156,10 @@ public class WolfPack {
             }
         }
     }
-
+    
     public static void calculateWolfYSpeed() {
         //Y
-        packSpeedY = (int) ((Define.BASE_SIZEY * Main.deltaTime) / Main.SECOND);
+        packSpeedY = (int) ((Define.BASE_SIZEY2 * Main.averageDt) / Main.SECOND);
     }
     //Pack movement logic
     //<editor-fold defaultstate="collapsed" desc="movement">
@@ -177,9 +180,9 @@ public class WolfPack {
 
     public static void movePack() {
         if (ms_isJumping) {
-            x += (((ms_iPackSpeedX / 4) * Main.deltaTime) / Main.SECOND);
+            x += (((ms_iPackSpeedX / 4) * Main.averageDt) / Main.SECOND);
         } else {
-            x += ((ms_iPackSpeedX * Main.deltaTime) / Main.SECOND);
+            x += ((ms_iPackSpeedX * Main.averageDt) / Main.SECOND);
         }
     }
 

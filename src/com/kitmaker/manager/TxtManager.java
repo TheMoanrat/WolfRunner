@@ -66,7 +66,7 @@ public class TxtManager {
     public static final int TXT_COMPLETED= TXT_RETURN + 1;
     public static final int TXT_EXIT_RUN= TXT_COMPLETED + 1;
     public static final int TXT_PLAY_AGAIN = TXT_EXIT_RUN + 1;
-    public static final int TXT_NEW_GAME = TXT_PLAY_AGAIN + 1;
+    public static final int TXT_RESUME = TXT_PLAY_AGAIN + 1;
 
     // Language
     public static final String ms_zBlankString = "";

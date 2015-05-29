@@ -42,7 +42,7 @@ public class Wolf extends Vector2 {
         state = ST_WOLF_WAITING;
         initRespawn();
     }
-
+//wolf has independent states
     public void Run() {
         switch (Define.ms_iState) {
             case Define.ST_GAME_ANIMATING:
@@ -60,6 +60,7 @@ public class Wolf extends Vector2 {
                 //</editor-fold>
                 break;
             case Define.ST_GAME_RUNNING:
+                
                 //<editor-fold defaultstate="collapsed" desc="Game runing stats">
                 switch (state) {
                     case ST_WOLF_WAITING:
@@ -83,12 +84,14 @@ public class Wolf extends Vector2 {
                         }
                         break;
                     case ST_WOLF_DYING:
+                        dustAnimation();
                         deathAnimation();
                         break;
                 }
                 //</editor-fold>
                 break;
             case Define.ST_GAME_OVER:
+                dustAnimation();
                 deathAnimation();
                 break;
         }
@@ -99,7 +102,7 @@ public class Wolf extends Vector2 {
     private final int FRAME_LIFETIME = (int) (Main.SECOND / 15);
 
     public void changeFrame() {
-        frameTimeRemaining += Main.deltaTime;
+        frameTimeRemaining += Main.averageDt;
         if (frameTimeRemaining >= FRAME_LIFETIME) {
             frameTimeRemaining = 0;
             actualFrame++;
@@ -112,7 +115,7 @@ public class Wolf extends Vector2 {
     public long spawnCountdown;
 
     public void spawnDelayController() {
-        spawnCountdown += Main.deltaTime;
+        spawnCountdown += Main.averageDt;
         if (spawnCountdown > iSpawnTimelapse) {
             spawnCountdown = 0;
             state = ST_WOLF_ANIMATING;
@@ -147,7 +150,7 @@ public class Wolf extends Vector2 {
             Vector2 direction = new Vector2(animationPixelsPerSecX, animationPixelsPerSecY);
             float distance = direction.length();
             direction.normalize();
-            direction.multiply(Math.min(Define.BASE_SIZEX2 * (float) Main.deltaTime / Main.SECOND, distance));
+            direction.multiply(Math.min(Define.BASE_SIZEX2 * (float) Main.averageDt / Main.SECOND, distance));
             x += direction.x;
             y += direction.y;
         }
@@ -180,7 +183,7 @@ public class Wolf extends Vector2 {
     public final int JUMP_FRAME2_DURATION = JUMP_DURATION / 2 + JUMP_FRAME1_DURATION;
 
     public void jump() {
-        jumpCountDown += Main.deltaTime;
+        jumpCountDown += Main.averageDt;
         if (jumpCountDown < JUMP_DURATION) {
             if (jumpCountDown < JUMP_FRAME1_DURATION) {
                 actualFrame = 5;
@@ -249,62 +252,100 @@ public class Wolf extends Vector2 {
     public final float DEATH_FRAME2_DURATION = DEATH_DURATION / 2;
 
     public void deathAnimation() {
-        deathCountdown += Main.deltaTime;
+        deathCountdown += Main.averageDt;
         if (deathCountdown < DEATH_DURATION) {
             if (deathCountdown < DEATH_FRAME1_DURATION) {
-                actualFrame = 7;
+                actualFrame = 5;
+                y -= WolfPack.packSpeedY / 2;
             } else if (deathCountdown < DEATH_FRAME2_DURATION) {
                 y += WolfPack.packSpeedY / 2;
                 actualFrame = 8;
+                isEatingDust = true;
             } else {
                 actualFrame = 9;
                 y += WolfPack.packSpeedY;
             }
         } else {
-            deathCountdown = 0;
-            state = ST_WOLF_INACTIVE;
+            if (y > Define.SIZEY) {
+                deathCountdown = 0;
+                dustCloudCountdown = 0;
+                dustFrame = 0;
+                state = ST_WOLF_INACTIVE;
+            }
+            y += WolfPack.packSpeedY;
         }
     }
-    //TODO apply dust clouds
-//    public final int DUST_CLOUDS_AMOUNT = 5;
-//    public int dustCountdown[] = new int[DUST_CLOUDS_AMOUNT];
-//    public int dustFrame[] = new int[dustCountdown.length];
-//    public final float DUST_CLOUD_DURATION = 1 * Main.SECOND;
-//    public final float DUST_FRAME_DURATION = (DUST_CLOUD_DURATION / 5);
-//    public int totalDustCountdown;
-//    public final float DUST_TOTAL_DURATION = DUST_CLOUD_DURATION * DUST_CLOUDS_AMOUNT;
-//
-//    public void dustAnimation() {
-//        totalDustCountdown += Main.deltaTime;
-//        if(totalDustCountdown<DUST_TOTAL_DURATION){
-//            if()
-//            }
-//        }else{
-//            
-//        }
-//    }
+    public boolean isEatingDust;
+    public int dustCloudCountdown;
+    public byte dustFrame;
+    public final float DUST_CLOUD_DURATION = (DEATH_DURATION / 4) * 3;
+    public final float DUST_CLOUD_FRAMES = GfxManager.DUST.length;
+    public final float DUST_CLOUD_FRAME_DURATION = DUST_CLOUD_DURATION / DUST_CLOUD_FRAMES;
+
+    public void dustAnimation() {
+        if (isEatingDust) {
+            dustCloudCountdown += Main.averageDt;
+            if (dustCloudCountdown < DUST_CLOUD_DURATION) {
+                if (dustCloudCountdown > DUST_CLOUD_FRAME_DURATION * (dustFrame + 1)) {
+                    dustFrame++;
+                }
+            } else {
+                if (y > Define.BASE_SIZEY) {
+                    isEatingDust = false;
+                    dustCloudCountdown = 0;
+                    dustFrame = 0;
+                }
+            }
+        }
+    }
 
     public void Draw(Graphics g) {
         switch (state) {
             case ST_WOLF_ANIMATING:
             case ST_WOLF_ACTIVE:
-            case ST_WOLF_DYING:
                 drawWolf(g);
+                break;
+            case ST_WOLF_DYING:
+                if (dustFrame < 5 && isEatingDust) {
+                    drawDust(g);
+                }
+                drawWolf(g);
+                if (dustFrame >= 5 && dustFrame < GfxManager.DUST.length && isEatingDust) {
+                    drawDust(g);
+                }
                 break;
         }
     }
 
-    public void drawWolf(Graphics _g) {
-        _g.setClip((int) x,
+    public void drawWolf(Graphics g) {
+        g.setClip((int) x,
                 (int) y,
                 GfxManager.SPRITE_DATA[GfxManager.WOLF[actualFrame]][GfxManager.SPR_WIDTH],
                 GfxManager.SPRITE_DATA[GfxManager.WOLF[actualFrame]][GfxManager.SPR_HEIGHT]);
-        _g.drawImage(
+        g.drawImage(
                 GfxManager.ms_vImage[GfxManager.GFXID_WOLF],
                 (int) x - GfxManager.SPRITE_DATA[GfxManager.WOLF[actualFrame]][GfxManager.SPR_POS_X],
                 (int) y - GfxManager.SPRITE_DATA[GfxManager.WOLF[actualFrame]][GfxManager.SPR_POS_Y],
                 0);
-        _g.setClip((int) 0,
+        g.setClip((int) 0,
+                (int) 0,
+                Define.BASE_SIZEX,
+                Define.BASE_SIZEY);
+    }
+
+    public void drawDust(Graphics g) {
+        g.setClip(((int) x + width / 2) - GfxManager.SPRITE_DATA[GfxManager.DUST[dustFrame]][GfxManager.SPR_WIDTH] / 2,
+                (int) y
+                - GfxManager.SPRITE_DATA[GfxManager.DUST[dustFrame]][GfxManager.SPR_HEIGHT] / 2,
+                GfxManager.SPRITE_DATA[GfxManager.DUST[dustFrame]][GfxManager.SPR_WIDTH],
+                GfxManager.SPRITE_DATA[GfxManager.DUST[dustFrame]][GfxManager.SPR_HEIGHT]);
+        g.drawImage(
+                GfxManager.ms_vImage[GfxManager.GFXID_DUST],
+                (int) (((int) x + width / 2) - GfxManager.SPRITE_DATA[GfxManager.DUST[dustFrame]][GfxManager.SPR_WIDTH] / 2) - GfxManager.SPRITE_DATA[GfxManager.DUST[dustFrame]][GfxManager.SPR_POS_X],
+                (int) y
+                - GfxManager.SPRITE_DATA[GfxManager.DUST[dustFrame]][GfxManager.SPR_HEIGHT] / 2,
+                0);
+        g.setClip((int) 0,
                 (int) 0,
                 Define.BASE_SIZEX,
                 Define.BASE_SIZEY);

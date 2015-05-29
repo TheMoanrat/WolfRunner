@@ -2272,7 +2272,7 @@ public class Main extends Canvas implements Runnable
 //#         return iY;
         //#endif
     }
-    
+    public static int averageDt;
     public void putDelta() {
         deltaTime = System.currentTimeMillis() - thisLoop;
 
@@ -2282,5 +2282,6 @@ public class Main extends Canvas implements Runnable
             deltaTime = 1;
         }
         thisLoop = System.currentTimeMillis();
+        averageDt += (Math.min(deltaTime, 100) - averageDt) >> 1;
     }
 }

@@ -39,47 +39,8 @@ public class ModeGame extends Define {
         {TxtManager.TXT_YES, TxtManager.TXT_NO},
         {TxtManager.TXT_MAIN_MENU_EXIT}
     };
-    static short[][] ms_iDinamicMenuTxt;
-    static short[] ms_iDinamicMenuNewSt;
-    static int ms_iNextState;
-    // RunGame
-    public static Random rnd = new Random();
-    // TOUCH
-    public static int ms_iTouchedPointX = 0;
-    public static int ms_iTouchedPointY = 0;
-    public static int ms_iTouchArea = (SIZEY8 + SIZEX8) >> 1;
-    public static int ms_iTouchX0 = 0;
-    public static int ms_iTouchY0 = 0;
-    public static int ms_iTouchX1 = 0;
-    public static int ms_iTouchY1 = 0;
-    public static int ms_iTouchWidth = 0;
-    public static int ms_iTouchHeight = 0;
-    public static int ms_iDeadZoneX = 0;
-    public static int ms_iDeadZoneY = 0;
-    public static int ms_iDeadZoneWidth = 0;
-    public static int ms_iDeadZoneHeight = 0;
     // Debug
     static boolean mst_bShowDebug;
-    //Text questions vars
-    private static String[] ms_sQuestionText;
-    private static short[][] ms_sNoHuntText;
-    private static int MAP_MARGIN_U;
-    public static int MAP_HEIGHT;
-    private static int MAP_HEIGHT2;
-    private static final int MARGIN_WORLD = Define.SIZEX > Define.SIZEY ? Define.SIZEY24 + (Define.SIZEY24 % 2) : Define.SIZEX24 + (Define.SIZEX24 % 2);
-    public static final int MAP_MARGIN_L = MARGIN_WORLD;
-    public static final int MAP_WITDH = Define.SIZEX - (MAP_MARGIN_L << 1);
-    private static final int MAP_WITDH2 = MAP_WITDH >> 1;
-    public static int homeMapPosX = 0;
-    public static int homeMapPosY = 0;
-    public static int ms_iArrowMapRunX = 0;
-    public static int ms_iArrowMapRunY = 0;
-    private static int ms_iArrowMapDrawX = 0;
-    private static int ms_iArrowMapDrawY = 0;
-    private static int ms_iArrowMapCircle;
-    public static int ms_iArrowMapPositionRunX = -1;
-    public static int ms_iArrowMapPositionRunY = -1;
-    static String zArray[];
     public static int level;
     public static int points;
 
@@ -100,7 +61,8 @@ public class ModeGame extends Define {
                 break;
             case Define.ST_GAME_ANIMATING:
             case Define.ST_GAME_RUNNING:
-                break;
+            case Define.ST_GAME_PAUSE:
+            case Define.ST_GAME_OVER:
         }
     }
     public static float levelUpCountdown;
@@ -108,7 +70,7 @@ public class ModeGame extends Define {
 
     private static void changeLevel() {
         points++;
-        levelUpCountdown += Main.deltaTime;
+        levelUpCountdown += Main.averageDt;
         if (levelUpCountdown > TIME_TO_LEVEL_UP) {
             levelUpCountdown = 0;
             level++;
@@ -127,45 +89,95 @@ public class ModeGame extends Define {
                 GfxManager.AddGraphic(GfxManager.GFXID_FIRST_RIVER_TILE);
                 GfxManager.AddGraphic(GfxManager.GFXID_SECOND_RIVER_TILE);
                 GfxManager.AddGraphic(GfxManager.GFXID_THIRD_RIVER_TILE);
+                GfxManager.AddGraphic(GfxManager.GFXID_DUST);
                 GfxManager.AddGraphic(GfxManager.GFXID_WOLF);
+                GfxManager.AddGraphic(GfxManager.GFXID_LIFES_ICON);
                 GfxManager.AddGraphic(GfxManager.GFXID_SK_MENU);
                 GfxManager.AddGraphic(GfxManager.GFXID_MENU_BUTTONS);
-                GfxManager.AddGraphic(GfxManager.GFXID_LIFES_ICON);
-
-
                 GfxManager.LoadGraphics(true);
                 break;
             case Define.ST_GAME_ANIMATING:
 
             case Define.ST_GAME_RUNNING:
                 break;
+            case Define.ST_GAME_PAUSE:
+            case Define.ST_GAME_OVER:
+
+                break;
         }
     }
-    private static final int OPT_RESTART_GAME = 0;
-    private static final int OPT_BACK_TO_MENU = OPT_RESTART_GAME + 1;
-    private static int gameOverMenuOption = OPT_RESTART_GAME;
+     public static boolean pressAccept() {
+        if (Main.GameKeyPressed(Main.KEYINT_FIRE, true)
+                || Main.GameKeyPressed(Main.KEYINT_SKLEFT, true)
+                || Main.GameKeyPressed(Main.KEYINT_5, true)) {
+            return true;
+        }
+        return false;
+    }
+     public static boolean pressUp(){
+         if (Main.GameKeyPressed(Main.KEYINT_UP, true)
+                || Main.GameKeyPressed(Main.KEYINT_2, true)) {
+            return true;
+        }
+        return false;
+     }
+     public static boolean pressDown(){
+         if (Main.GameKeyPressed(Main.KEYINT_DOWN, true)
+                || Main.GameKeyPressed(Main.KEYINT_8, true)) {
+            return true;
+        }
+        return false;
+     }
+    /*
+     * Menu Options (pause and game over)
+     */
+    private static final int OPTION1 = 0;
+    private static final int OPTION2 = OPTION1 + 1;
+    private static int selectedMenuOption = OPTION1;
+
+    private static void useMenu(int options) {
+        if (pressUp()) {
+            selectedMenuOption--;
+            if (selectedMenuOption < 0) {
+                selectedMenuOption = options;
+            }
+        }
+        if (pressDown()) {
+            selectedMenuOption++;
+            if (selectedMenuOption > options) {
+                selectedMenuOption = 0;
+            }
+        }
+    }
+
+    private static void pauseGame() {
+        useMenu(2);
+        if (pressAccept()) {
+            switch (selectedMenuOption) {
+                case OPTION1:
+                    Main.RequestStateChange(Define.ST_GAME_RUNNING);
+                    break;
+                case OPTION2:
+                    Main.RequestStateChange(Define.ST_MENU_MAIN);
+                    break;
+            }
+        }
+    }
 
     private static void restartGame() {
-        if (Main.GameKeyPressed(Main.KEYINT_FIRE, true)
-                || Main.GameKeyPressed(Main.KEYINT_SKLEFT, true)) {
-            if (gameOverMenuOption == OPT_RESTART_GAME) {
-                Main.RequestStateChange(Define.ST_GAME_INIT);
-            } else if (gameOverMenuOption == OPT_BACK_TO_MENU) {
-                Main.RequestStateChange(Define.ST_MENU_MAIN);
-            }
-        }
-        if (Main.GameKeyPressed(Main.KEYINT_DOWN, true)
-                || Main.GameKeyPressed(Main.KEYINT_UP, true)) {
-            if (gameOverMenuOption == OPT_RESTART_GAME) {
-                gameOverMenuOption = OPT_BACK_TO_MENU;
-                return;
-            }
-            if (gameOverMenuOption == OPT_BACK_TO_MENU) {
-                gameOverMenuOption = OPT_RESTART_GAME;
-                return;
+        useMenu(2);
+        if (pressAccept()) {
+            switch (selectedMenuOption) {
+                case OPTION1:
+                    Main.RequestStateChange(Define.ST_GAME_INIT);
+                    break;
+                case OPTION2:
+                    Main.RequestStateChange(Define.ST_MENU_MAIN);
+                    break;
             }
         }
     }
+
     /*
      * load the images used during the gameplay
      */
@@ -184,6 +196,12 @@ public class ModeGame extends Define {
                 Scenario.Run();
                 WolfPack.Run();
                 changeLevel();
+                if (Main.GameKeyPressed(Main.KEYINT_SKLEFT, true)) {
+                    Main.RequestStateChange(ST_GAME_PAUSE);
+                }
+                break;
+            case Define.ST_GAME_PAUSE:
+                pauseGame();
                 break;
             case Define.ST_GAME_OVER:
                 Scenario.Run();
@@ -205,6 +223,12 @@ public class ModeGame extends Define {
                 WolfPack.Draw(g);
                 Hud.Draw(g);
                 break;
+            case Define.ST_GAME_PAUSE:
+                Scenario.Draw(g);
+                WolfPack.Draw(g);
+                Hud.Draw(g);
+                drawPause(g);
+                break;
             case Define.ST_GAME_OVER:
                 Scenario.Draw(g);
                 WolfPack.Draw(g);
@@ -214,13 +238,19 @@ public class ModeGame extends Define {
         }
     }
 
-    static void drawGameOvermenu(Graphics g) {
+    private static void drawGameOvermenu(Graphics g) {
         Menu.DrawNavigationIcons(g, Define.SK_OK, Define.SK_BACK);
-        drawGameOvermenuOption(g, gameOverMenuOption == OPT_RESTART_GAME, Define.BASE_SIZEY4, TxtManager.TXT_PLAY_AGAIN);
-        drawGameOvermenuOption(g, gameOverMenuOption == OPT_BACK_TO_MENU, Define.BASE_SIZEY2, TxtManager.TXT_EXIT_RUN);
+        drawMenuOption(g, selectedMenuOption == OPTION1, Define.BASE_SIZEY4, TxtManager.TXT_PLAY_AGAIN);
+        drawMenuOption(g, selectedMenuOption == OPTION2, Define.BASE_SIZEY2, TxtManager.TXT_EXIT_RUN);
     }
 
-    public static void drawGameOvermenuOption(Graphics g, boolean isActive, int y, int textIndex) {
+    private static void drawPause(Graphics g) {
+        Menu.DrawNavigationIcons(g, Define.SK_OK, Define.SK_BACK);
+        drawMenuOption(g, selectedMenuOption == OPTION1, Define.BASE_SIZEY4, TxtManager.TXT_RESUME);
+        drawMenuOption(g, selectedMenuOption == OPTION2, Define.BASE_SIZEY2, TxtManager.TXT_EXIT_RUN);
+    }
+
+    public static void drawMenuOption(Graphics g, boolean isActive, int y, int textIndex) {
         int font, button;
 
         if (isActive) {

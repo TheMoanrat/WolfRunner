@@ -124,7 +124,7 @@ public class GfxManager {
     public static final int SPRID_LIFES_ICON = SPRID_TITLE_HEADER+1;
     public static final int SPRID_DUST = SPRID_LIFES_ICON+1;
     //Wolves
-   public static final int SPRID_WOLF = SPRID_DUST+5;
+   public static final int SPRID_WOLF = SPRID_DUST+9;
 
     //#if SIZE == "Small"
 //#      static short [][] SPRITE_DATA = {
@@ -156,11 +156,15 @@ public class GfxManager {
         {GFXID_LIFES_ICON, 0, 0, 17, 21, 0, 0},
         
         //dust animation
-        {GFXID_DUST, 0, 0, 32, 32, 0, 0},
-        {GFXID_DUST, 0, 32, 32, 32, 0, 0},
-        {GFXID_DUST, 0, 64, 32, 32, 0, 0},
-        {GFXID_DUST, 0, 96, 32, 32, 0, 0},
-        {GFXID_DUST, 0, 128, 32, 32, 0, 0},
+        {GFXID_DUST, 0, 0, 64, 64, 0, 0},
+        {GFXID_DUST, 64, 0, 64, 64, 0, 0},
+        {GFXID_DUST, 64*2, 0, 64, 64, 0, 0},
+        {GFXID_DUST, 64*3, 0, 64, 64, 0, 0},
+        {GFXID_DUST, 64*4, 0, 64, 64, 0, 0},
+        {GFXID_DUST, 64*5, 0, 64, 64, 0, 0},
+        {GFXID_DUST, 64*6, 0, 64, 64, 0, 0},
+        {GFXID_DUST, 64*7, 0, 64, 64, 0, 0},
+        {GFXID_DUST, 64*8, 0, 64, 64, 0, 0},
         //0,1,2,3,4 Wolf runing
         //5,6, Wolf jumping
         //7,8 ,9 Wolf dead
@@ -239,6 +243,10 @@ public class GfxManager {
         SPRID_DUST+2,
         SPRID_DUST+3,
         SPRID_DUST+4,
+        SPRID_DUST+5,
+        SPRID_DUST+6,
+        SPRID_DUST+7,
+        SPRID_DUST+8,
         };
     public static final byte WOLF[] = {
         SPRID_WOLF,

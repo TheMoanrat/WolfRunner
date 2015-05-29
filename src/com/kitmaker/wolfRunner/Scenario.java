@@ -23,7 +23,7 @@ public class Scenario {
     public static final int RIVER_TILE_END = 4;
 
     public static void init() {
-        iFirstTileY = -GfxManager.TILE_DATA[0][GfxManager.SPR_HEIGHT];
+        iFirstTileY = -GfxManager.TILE_DATA[1][GfxManager.SPR_HEIGHT];
         isSingleObstacle = true;
         generateSmallObstacle();
         generateBigObstacle();
@@ -48,26 +48,30 @@ public class Scenario {
 
     public static void moveTiles() {
         iFirstTileY += WolfPack.packSpeedY;
-        if (iFirstTileY > 0) {
+        if (iFirstTileY >= 0) {
             //arrays to help move the tiles down
-            int[] aux1 = new int[iMapTiles[0].length];
-            int[] aux2 = generateTiles();
-
-            for (int i = 0; i < iMapTiles.length; i++) {
-                for (int e = 0; e < iMapTiles[i].length; e++) {
-                    aux1[e] = iMapTiles[i][e];
-                    iMapTiles[i][e] = aux2[e];
-                    aux2[e] = aux1[e];
-                }
+//            int[] aux1 = new int[iMapTiles[0].length];
+//            int[] aux2 = generateTiles();
+            
+            
+            for(int i = iMapTiles.length-2; i >= 0; i--){
+                System.arraycopy(iMapTiles[i], 0, iMapTiles[i+1], 0, iMapTiles[i].length);
             }
+            generateTiles(iMapTiles[0]);
+//            for (int i = 0; i < iMapTiles.length; i++) {
+//                for (int e = 0; e < iMapTiles[i].length; e++) {
+//                    aux1[e] = iMapTiles[i][e];
+//                    iMapTiles[i][e] = aux2[e];
+//                    aux2[e] = aux1[e];
+//                }
+//            }
             iFirstTileY = -TILE_HEIGHT;
             rowsToObstacle--;
         }
     }
     public static boolean bObstacleThrown;
 
-    public static int[] generateTiles() {
-        int[] nextRow = new int[iMapTiles[0].length];
+    public static void generateTiles(int[] nextRow) {
         if (isSingleObstacle && !bObstacleThrown) {
             for (int i = 0; i < nextRow.length; i++) {
                 if (i == iObstacleCol) {
@@ -95,7 +99,6 @@ public class Scenario {
                 nextRow[i] = GRASS_TILE;
             }
         }
-        return nextRow;
     }
 
     public static void checkObstacleIncome() {
